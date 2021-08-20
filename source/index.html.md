@@ -3,13 +3,9 @@ title: API Reference
 
 language_tabs: # must be one of https://git.io/vQNgJ
   - shell
-  - ruby
-  - python
-  - javascript
 
 toc_footers:
-  - <a href='#'>Sign Up for a Developer Key</a>
-  - <a href='https://github.com/slatedocs/slate'>Documentation Powered by Slate</a>
+  - <a href='#'>Contact us for API Credentials</a>
 
 includes:
   - errors
@@ -23,7 +19,7 @@ code_clipboard: true
 
 The Zappi API is REST-based and returns responses in JSON.
 
-To use our API, you’ll need to contact us in order to have a public integration set up.
+To use our API, you’ll need to contact us in order to have a public integration created.
 
 # Beta
 
@@ -37,22 +33,22 @@ Added ‘visibility’ to the order payload.
 
 ## 19 July 2021
 
-Added ‘workspace_id’ as an optional parameter on POST /orders.
+Added ‘workspace_id’ as an optional parameter on `POST /orders.`
 Added ‘workspace_id’ to the order payload.
 
 ## 14 July 2021
 
-Added ‘root_workspace_id’ to GET public_integrations/identity payload.
-Added GET /workspaces/{id} endpoint.
+Added ‘root_workspace_id’ to `GET public_integrations/identity` payload.
+Added `GET /workspaces/{id}` endpoint.
 
 ## 15 April 2021
 
-Updated GET /Orders rate limit from 10 to 20.
+Updated `GET /Orders` rate limit from 10 to 20.
 Increased default pagination size from 30 to 100.
 
 ## 8 April 2021
 
-Added product_id and country_code to the order payload.
+Added `product_id` and `country_code` to the order payload.
 
 # API Overview
 
@@ -78,7 +74,6 @@ Field | Description | Required
 Integration Name | Any name used to identify the Public Integration | Yes
 Author | Company or person who built the integration| Yes
 Description | A description of the integration | Yes
-Redirect URL | The URL Zappi will redirect users to after installation | Yes
 Callback URI Host | A list of valid hosts to be used in any callback URIs | No
 
 Each Public Integration will be assigned the following:
@@ -90,12 +85,30 @@ Client Secret | The client secret to be used for oAuth Client Credentials flow
 
 ### Installation
 
-When a Public Integration is installed on a subdomain, Zappi will redirect the user to the provided Redirect URL with the installation_uuid and the client_id in the query string.
+Once a Public Integration is installed on a subdomain, the Public Integration will be able to make API requests on behalf of the customer group.
 
 
 # Authentication
 
 ## oAuth Process
+
+
+> Example Request:
+
+```shell
+curl "http://api.zappi.io/v1/public_integrations" \
+  -H "Authorization: Basic 12345 "
+```
+
+> Example Response:
+
+```json
+{
+    "access_token": "abcdefghijk",
+    "expires_in": 86400,
+    "token_type": "Bearer"
+}
+```
 
 In order to obtain an access token, a request will need to be made to: _POST /public_integrations/authorize_
 
@@ -111,7 +124,7 @@ Authorization | Basic `<Base64 encoded(Client ID:Client Secret) >`
 Field | Description | Data Type
 --------- | ----------- | -----------
 access_token | The access token | The Access Token
-token_type | This will be `bearer``| String
+token_type | This will be `bearer`| String
 expires_in | When the access token expires | DateTime
 
 ### Access Token
@@ -129,6 +142,25 @@ Public Integration access tokens expire after 24 hours.
 
 
 ## Identification
+
+> Example Request:
+
+```shell
+curl "http://api.zappi.io/v1/public_integrations" \
+  -H "Authorization: Bearer abcdefghijk"
+  -H "X-Zappi-Installation": "123456-789-12345-6789-123456"
+```
+
+> Example Response:
+
+```json
+{
+    "client_id": "123456789",
+    "installation_uuid": "123456-789-12345-6789-123456",
+    "subdomain_url": "https://subdomain.zappi.io",
+    "root_workspace_id": 999
+}
+```
 
 In order to view information pertaining to a public integration installation, a request will need to be made to: _GET /public_integrations/identity_
 
@@ -172,6 +204,23 @@ Max Requests | Interval (seconds) | Endpoints
 10 | 60 | DELETE event_subscriptions/{id}
 10 | 60 | GET workspaces/{id}
 
+# Error Codes
+
+Error Code | HTTP Status Code | Error Message
+--------- | ----------- | -----------
+1000 | 400 | Unable to process the request. Invalid input.
+1002 | 400 | Unable to process the request. Invalid request headers.
+1010 | 401 | Invalid credentials. Integration does not exist.
+1011 | 401 | Access token expired.
+1012 | 401 | Access token invalid.
+1020 | 403 | Not permitted to access this resource.
+1021 | 403 | Request could not be processed.
+1030 | 404 | Resource not found.
+1031 | 409 | The requested resource already exists.
+1050 | 429 | Rate limit reached. Please try again later.
+1060 | 500 | Internal server error. Unable to process request.
+1061 | 503 | Service unavailable.
+
 
 # Pagination
 
@@ -188,10 +237,39 @@ cursor | Identifies where the next set of results should begin. Each API respons
 
 ## Products
 
-- GET /products
+**GET /products**
+
+> Example Request:
+
+```shell
+curl "http://api.zappi.io/v1/products" \
+  -H "Authorization: Bearer abcdefghijk"
+  -H "X-Zappi-Installation": "123456-789-12345-6789-123456"
+```
+
+> Example Response:
+
+```json
+{
+    "next_cursor": 3,
+    "products": [
+        {
+            "description": "A product description.",
+            "id": 2,
+            "name": "Product 2"
+        },
+        {
+            "description": "Another product description.",
+            "id": 3,
+            "name": "Product 3"
+        }
+    ]
+}
+```
+
 - Returns the list of products available for the customer group
 
-### Response
+### Response Body
 
 Field Name | Description | Data Type
 --------- | ----------- | -----------
@@ -202,7 +280,42 @@ description | Product description | String
 
 ## Orders
 
-- GET /orders
+**GET /orders**
+
+> Example Request:
+
+```shell
+curl "https://api.zappi.io/v1/orders?limit=2&customer_email=name@domain.com" \
+  -H "Authorization: Bearer abcdefghijk"
+  -H "X-Zappi-Installation": "123456-789-12345-6789-123456"
+```
+
+> Example Response:
+
+```json
+{
+    "next_cursor": 2,
+    "orders": [
+        {
+            "analyze_url": "https://subdomain.zappi.io/project_setup/zappi-product-test/1/analyze_project",
+            "configure_url": "",
+            "id": 1,
+            "status": "processing",
+            "title": "An order title"
+        },
+        {
+            "analyze_url": "https://subdomain.zappi.io/project_setup/zappi-product-test/2/analyze_project",
+            "configure_url": "https://subdomain.zappi.io/project_setup/mmr-impackt-lite/2/start_new_project",
+            "id": 2,
+            "status": "configuration",
+            "title": "Another order title",
+            "workspace_id": 1234,
+            "visibility": "public"
+        }
+    ]
+}
+```
+
 - Returns the list of orders available to the customer in the customer group
 
 ### Query String
@@ -212,7 +325,7 @@ Field Name | Description | Data Type | Required
 customer_email | The email address of the customer the request is being made on behalf of. | String | Yes
 
 
-### Response
+### Response Body
 
 Field Name | Description | Data Type
 --------- | ----------- | -----------
@@ -226,31 +339,262 @@ analyze_url | The URL that will go to the analysis page of the order on the Zapp
 workspace_id | The workspace ID that the order is in | Integer
 visibility | The visibility of the order: `private`, `public` (available to everyone in the organisation | String
 
+**GET /orders/{id}**
+
+> Example Request:
+
+```shell
+curl "GET https://api.zappi.io/v1/orders/2?customer_email=name@domain.com" \
+  -H "Authorization: Bearer abcdefghijk"
+  -H "X-Zappi-Installation": "123456-789-12345-6789-123456"
+```
+
+> Example Response:
+
+```json
+{
+    "order": {
+        "analyze_url": "https://subdomain.zappi.io/project_setup/zappi-product-test/2/analyze_project",
+        "configure_url": "https://subdomain.zappi.io/project_setup/zappi-product-test/2/start_new_project",
+        "id": 2,
+        "status": "configuration",
+        "title": "Another order title",
+        "workspace_id": 1234,
+        "visibility": "public"
+    }
+}
+```
+
+- Returns the list of orders available to the customer in the customer group
+
+### Query String
+
+Field Name | Description | Data Type | Required
+--------- | ----------- | ----------- | -----------
+customer_email | The email address of the customer the request is being made on behalf of. | String | Yes
+
+
+### Response Body
+
+Field Name | Description | Data Type
+--------- | ----------- | -----------
+id | Order Id | Integer
+title | Order title | String
+product_id | Product ID | Integer
+country_code | Fieldwork country’s ISO 3166-1 alpha-2 code | String
+status | The status of the order: `configuration`, `processing`, `complete` | String
+configure_url | The URL that will go to the configuration page of the order on the Zappi platform | String
+analyze_url | The URL that will go to the analysis page of the order on the Zappi platform | String
+workspace_id | The workspace ID that the order is in | Integer
+visibility | The visibility of the order: `private`, `public` (available to everyone in the organisation | String
+
+**GET /orders/{id}/deliverables**
+
+> Example Request:
+
+```shell
+curl "https://api.zappi.io/v1/orders/3/deliverables" \
+  -H "Authorization: Bearer abcdefghijk"
+  -H "X-Zappi-Installation": "123456-789-12345-6789-123456"
+```
+
+> Example Response:
+
+```json
+{
+    "deliverables": {
+        "report": {
+            "pdf": "https://s3.amazonaws.com/zappi.api-exports/production/3/report_3.pdf?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=A123456%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20201202T103901Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=123456",
+            "pptx": "https://s3.amazonaws.com/zappi.api-exports/production/3/report_3.pptx?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=A123456%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20201202T103901Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=123456"
+        },
+        "survey_questionnaires": {
+            "pdf": [
+                "https://s3.amazonaws.com/zappi.api-exports/production/3/3/survey_questionnaire_1_3.pdf?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=A123456%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20201202T103901Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=123456"
+            ]
+        },
+        "survey_respondent_data": {
+            "csv": "https://s3.amazonaws.com/zappi.api-exports/production/3/survey_respondent_data_3.csv?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=A123456%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20201202T103901Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=123456",
+            "sav": "https://s3.amazonaws.com/zappi.api-exports/production/3/survey_respondent_data_3.sav?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=A123456%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20201202T103901Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=123456"
+        },
+        "survey_metadata": {
+           "xlsx":
+"https://s3.amazonaws.com/zappi.api-exports/production/3/survey_metadata_3.xlxs?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=A123456%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20201202T103901Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=123456"
+    }
+}
+```
+
+- Returns all the order deliverables
+
+### Response Body
+
+Field Name | Description | Data Type
+--------- | ----------- | -----------
+deliverables | List of all deliverables available for the order. URLs will expire after a certain period of time. | JSON
+
+
+**POST /orders/{id}**
+
+> Example Request:
+
+```shell
+curl "https://api.zappi.io/v1/orders" \
+  -X POST
+  -H "Authorization: Bearer abcdefghijk"
+  -H "X-Zappi-Installation": "123456-789-12345-6789-123456"
+  -d '{"order":{"product_id":1,"title":"An Order Title", "customer_email":"user@domain.com","workspace_id":1234}'
+}
+
+```
+
+> Example Response:
+
+```json
+{
+    "order": {
+        "analyze_url": "https://subdomain.zappi.io/project_setup/zappi-concept-test/4/analyze_project",
+        "configure_url": "https://subdomain.zappi.io/project_setup/zappi-concept-test/4/start_new_project",
+        "id": 4,
+        "status": "configuration",
+        "title": "An Order Title",
+        "title": "An Order Title",
+        "workspace_id": 1,
+        "visibility": "public"
+    }
+}
+```
+
+- Create an unconfigured order
+
+### Request Body
+
+Field Name | Description | Data Type | Required
+--------- | ----------- | ----------- | -----------
+product_id | Product ID | Integer | Yes
+title | The title of the order | String | Yes
+customer_email | Email address of the customer creating the order | String | Yes
+workspace_id | The workspace to create the order under (defaults to the root workspace) | Integer | No
+
+### Response Body
+
+Field Name | Description | Data Type
+--------- | ----------- | -----------
+id | Order ID | Integer
+title | Order title | String
+status | The status of the order: `configuration`, `processing`, `complete` | String
+configure_url | The URL that will direct users to the configuration page of the order on the Zappi platform | String
+analyze_url | The URL that will direct users to the analysis page of the order on the Zappi platform | String
+workspace_id | The workspace ID that the order is in | Integer
+visibility | The visibility of the order: `private`, `public` (available to everyone in the organisation | String
+
+## Event Subscriptions
+
+**GET /event_subscriptions**
+
+- Returns the list of event subscriptions.
+
+### Response Body
+
+Field Name | Description | Data Type
+--------- | ----------- | -----------
+id | Event Subscription ID | Integer
+event_type | Type of event subscribed to: `order_completed` | String
+order_id | The order ID | String
+callback_uri | The URI to notify when the event occurs | String
+
+
+**GET /event_subscriptions/{id}**
+
+- Event subscription details
+
+Response
+Same fields as GET /event_subscriptions response
+
+
+**POST /event_subscriptions**
+
+- Subscribe to an event
+
+### Request Body
+
+Field Name | Description | Data Type | Required
+--------- | ----------- | ----------- | -----------
+event_type | Type of event subscribed to: `order_completed` | Integer | Yes
+order_id | The order ID | Integer | Yes
+callback_uri | The URI to notify when the event occurs. This URI needs to be whitelisted beforehand. | String | Yes
+
+### Response Body
+
+Field Name | Description | Data Type
+--------- | ----------- | -----------
+id | Event Subscription ID | Integer
+event_type | Type of event subscribed to: `order_completed` | String
+order_id | The order ID | String
+callback_uri | The URI to notify when the event occurs | String
+
+### Event Subscription Callback Payload
+
+Field Name | Description | Data Type
+--------- | ----------- | -----------
+event_type | Type of event subscribed to: `order_completed` | String
+order_id | The order ID | String
+callback_uri | The URI to notify when the event occurs | String
+event_datetime | The URI to notify when the event occurs. This URI needs to be whitelisted beforehand. | DateTime
+event_reference | The unique reference for the event | String
+
+
+**DELETE  /event_subscriptions/{id}**
+
+- Deletes an event subscription
+
+
+## Workspaces
+
+**GET /workspaces**
+
+- Workspace details.
+
+### Query String
+
+Field Name | Description | Data Type | Required
+--------- | ----------- | ----------- | -----------
+customer_email | The email address of the customer the request is being made on behalf of. | String | Yes
+
+### Response Body
+
+Field Name | Description | Data Type
+--------- | ----------- | -----------
+id | Workspace ID | Integer
+label | Workspace title | String
+children | TThe child workspaces for this workspace | String
+
+## Webhook Security
+
+All requests made by Zappi to the provided callback_uri will have a hash signature with each payload. This hash signature is passed along in the headers as X-Zappi-Signature. The HMAC hexdigest will be used to compute the hash.
+
+## Event Types
+
+Event Type | Description
+--------- | -----------
+order_complete | The order is completed. All survey responses have been collected. The report has been generated and is published on the platform. All deliverables have been uploaded to AWS S3.
+
+## Deliverables
+
+Export Type | Description | Format | Pre-requisite event
+--------- | ----------- | ----------- | -----------
+survey_questionnaire | The survey questionnaire | `.pdf` | `order_complete`
+report | The full report with analysis | `.pdf`, `.pptx`, `.xlsx` | `order_complete`
+survey_responses | The raw respondent data | `.pdf`, `.pptx` | `order_complete`
+survey_metadata | The survey metadata | `.xls` | `order_complete`
+
+<aside class="warning">Please note that, for now, the structure and content of our deliverables is subject to change at Zappi’s discretion and should not be regarded as static or permanent. Please keep this in mind when automatically parsing data from these files.</aside>
+
 
 > To authorize, use this code:
-
-```ruby
-require 'kittn'
-
-api = Kittn::APIClient.authorize!('meowmeowmeow')
-```
-
-```python
-import kittn
-
-api = kittn.authorize('meowmeowmeow')
-```
 
 ```shell
 # With shell, you can just pass the correct header with each request
 curl "api_endpoint_here" \
   -H "Authorization: meowmeowmeow"
-```
-
-```javascript
-const kittn = require('kittn');
-
-let api = kittn.authorize('meowmeowmeow');
 ```
 
 > Make sure to replace `meowmeowmeow` with your API key.
@@ -269,30 +613,9 @@ You must replace <code>meowmeowmeow</code> with your personal API key.
 
 ## Get All Kittens
 
-```ruby
-require 'kittn'
-
-api = Kittn::APIClient.authorize!('meowmeowmeow')
-api.kittens.get
-```
-
-```python
-import kittn
-
-api = kittn.authorize('meowmeowmeow')
-api.kittens.get()
-```
-
 ```shell
 curl "http://example.com/api/kittens" \
   -H "Authorization: meowmeowmeow"
-```
-
-```javascript
-const kittn = require('kittn');
-
-let api = kittn.authorize('meowmeowmeow');
-let kittens = api.kittens.get();
 ```
 
 > The above command returns JSON structured like this:
@@ -335,30 +658,10 @@ Remember — a happy kitten is an authenticated kitten!
 
 ## Get a Specific Kitten
 
-```ruby
-require 'kittn'
-
-api = Kittn::APIClient.authorize!('meowmeowmeow')
-api.kittens.get(2)
-```
-
-```python
-import kittn
-
-api = kittn.authorize('meowmeowmeow')
-api.kittens.get(2)
-```
 
 ```shell
 curl "http://example.com/api/kittens/2" \
   -H "Authorization: meowmeowmeow"
-```
-
-```javascript
-const kittn = require('kittn');
-
-let api = kittn.authorize('meowmeowmeow');
-let max = api.kittens.get(2);
 ```
 
 > The above command returns JSON structured like this:
@@ -389,31 +692,10 @@ ID | The ID of the kitten to retrieve
 
 ## Delete a Specific Kitten
 
-```ruby
-require 'kittn'
-
-api = Kittn::APIClient.authorize!('meowmeowmeow')
-api.kittens.delete(2)
-```
-
-```python
-import kittn
-
-api = kittn.authorize('meowmeowmeow')
-api.kittens.delete(2)
-```
-
 ```shell
 curl "http://example.com/api/kittens/2" \
   -X DELETE \
   -H "Authorization: meowmeowmeow"
-```
-
-```javascript
-const kittn = require('kittn');
-
-let api = kittn.authorize('meowmeowmeow');
-let max = api.kittens.delete(2);
 ```
 
 > The above command returns JSON structured like this:

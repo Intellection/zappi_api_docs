@@ -5,7 +5,7 @@ language_tabs: # must be one of https://git.io/vQNgJ
   - shell
 
 toc_footers:
-  - <a href='#'>Contact us for API Credentials</a>
+  - Contact <a href="mailto:support@zappi.com"> support@zappi.com</a> for API Credentials
 
 includes:
   - errors
@@ -97,7 +97,7 @@ Once a Public Integration is installed on a subdomain, the Public Integration wi
 
 ```shell
 curl "http://api.zappi.io/v1/public_integrations" \
-  -H "Authorization: Basic 12345 "
+  -H "Authorization: Basic 12345 " \
 ```
 
 > Example Response:
@@ -113,19 +113,19 @@ curl "http://api.zappi.io/v1/public_integrations" \
 In order to obtain an access token, a request will need to be made to: _POST /public_integrations/authorize_
 
 
-### Headers
+#### Headers
 
 Field | Description
 --------- | -----------
 Authorization | Basic `<Base64 encoded(Client ID:Client Secret) >`
 
-### Response Body
+#### Response Body
 
 Field | Description | Data Type
 --------- | ----------- | -----------
 access_token | The access token | The Access Token
-token_type | This will be `bearer`| String
 expires_in | When the access token expires | DateTime
+token_type | This will be `bearer`| String
 
 ### Access Token
 
@@ -147,7 +147,7 @@ Public Integration access tokens expire after 24 hours.
 
 ```shell
 curl "http://api.zappi.io/v1/public_integrations" \
-  -H "Authorization: Bearer abcdefghijk"
+  -H "Authorization: Bearer abcdefghijk" \
   -H "X-Zappi-Installation": "123456-789-12345-6789-123456"
 ```
 
@@ -164,14 +164,14 @@ curl "http://api.zappi.io/v1/public_integrations" \
 
 In order to view information pertaining to a public integration installation, a request will need to be made to: _GET /public_integrations/identity_
 
-### Response Body
+#### Response Body
 
 Field | Description | Data Type
 --------- | ----------- | -----------
 client_id | The Client ID of the public integration | String
-subdomain_url | The subdomain URL of the customer group | String
 installation_uuid | The installation UUID belonging to the customer group/public integration installation | String
 root_workspace_id | The ID of the root workspace for this customer group | Integer
+subdomain_url | The subdomain URL of the customer group | String
 
 ## Permissions
 
@@ -179,47 +179,29 @@ Each integration is assigned a set of permissions. The permissions will determin
 
 Scope | Label | Description
 --------- | ----------- | -----------
-read_orders | View orders and order deliverables | View orders belonging to the Customer Group.
+read_orders | View orders and order deliverables | View orders belonging to the Customer Group
 write_orders | Create orders | Create orders
-write_event_subscriptions | Create/delete event subscriptions | Subscribe to events
 read_event_subscriptions | View event subscriptions | View event subscriptions
+write_event_subscriptions | Create/delete event subscriptions | Subscribe to events
 read_workspaces | View workspaces | View workspaces belonging to the Customer and Customer Group
-
 
 # Rate Limits
 
 
 Max Requests | Interval (seconds) | Endpoints
 --------- | ----------- | -----------
-20 | 60 | GET orders/
-10 | 60 | GET orders/{id}
-10 |60 | GET orders/{id}/delverables
-5 | 60 | POST orders/
-10 | 60 | GET products/
-10 | 60 | GET public_integrations/identity/
-1 | 300 | POST public_integrations/authorize
-10 | 60 | GET event_subscriptions/
-5 | 60 | View POST event_subscriptions
-10 | 60 | GET event_subscriptions/{id}
-10 | 60 | DELETE event_subscriptions/{id}
-10 | 60 | GET workspaces/{id}
-
-# Error Codes
-
-Error Code | HTTP Status Code | Error Message
---------- | ----------- | -----------
-1000 | 400 | Unable to process the request. Invalid input.
-1002 | 400 | Unable to process the request. Invalid request headers.
-1010 | 401 | Invalid credentials. Integration does not exist.
-1011 | 401 | Access token expired.
-1012 | 401 | Access token invalid.
-1020 | 403 | Not permitted to access this resource.
-1021 | 403 | Request could not be processed.
-1030 | 404 | Resource not found.
-1031 | 409 | The requested resource already exists.
-1050 | 429 | Rate limit reached. Please try again later.
-1060 | 500 | Internal server error. Unable to process request.
-1061 | 503 | Service unavailable.
+10 | 60 | GET /event_subscriptions
+5 | 60 | POST /event_subscriptions
+10 | 60 | GET /event_subscriptions/{id}
+10 | 60 | DELETE /event_subscriptions/{id}
+20 | 60 | GET /orders
+10 | 60 | GET /orders/{id}
+10 |60 | GET /orders/{id}/delverables
+5 | 60 | POST /orders
+10 | 60 | GET /products
+1 | 300 | POST /public_integrations/authorize
+10 | 60 | GET /public_integrations/identity
+10 | 60 | GET /workspaces/{id}
 
 
 # Pagination
@@ -235,15 +217,15 @@ cursor | Identifies where the next set of results should begin. Each API respons
 
 # API Endpoints
 
-## Products
+## Event Subscriptions
 
-**GET /products**
+### GET /event_subscriptions
 
 > Example Request:
 
 ```shell
-curl "http://api.zappi.io/v1/products" \
-  -H "Authorization: Bearer abcdefghijk"
+curl "https://api.zappi.io/v1/event_subscriptions" \
+  -H "Authorization: Bearer abcdefghijk" \
   -H "X-Zappi-Installation": "123456-789-12345-6789-123456"
 ```
 
@@ -251,32 +233,149 @@ curl "http://api.zappi.io/v1/products" \
 
 ```json
 {
-    "next_cursor": 3,
-    "products": [
+    "event_subscriptions": [
         {
-            "description": "A product description.",
-            "id": 2,
-            "name": "Product 2"
-        },
-        {
-            "description": "Another product description.",
-            "id": 3,
-            "name": "Product 3"
+            "callback_uri": "https://api.callback_url.com/",
+            "event_type": "order_completed",
+            "id": 1,
+            "order_id": 4
         }
-    ]
+    ],
+    "next_cursor": null
 }
 ```
 
-- Returns the list of products available for the customer group
+  Returns the list of event subscriptions.
 
-### Response Body
+#### Response Body
 
 Field Name | Description | Data Type
 --------- | ----------- | -----------
-id | Product ID | Integer
-name | Product Name | String
-description | Product description | String
+id | Event Subscription ID | Integer
+callback_uri | The URI to notify when the event occurs | String
+event_type | Type of event subscribed to: `order_completed` | String
+order_id | The order ID | String
 
+
+
+### GET /event_subscriptions/{id}
+
+> Example Request:
+
+```shell
+curl "https://api.zappi.io/v1/event_subscriptions/1" \
+  -H "Authorization: Bearer abcdefghijk" \
+  -H "X-Zappi-Installation": "123456-789-12345-6789-123456"
+```
+
+> Example Response:
+
+```json
+{
+  "event_subscription": {
+    "callback_uri": "https://api.callback_url.com/",
+    "event_type": "order_completed",
+    "id": 1,
+    "order_id": 4
+  }
+}
+```
+
+  Event subscription details
+
+#### Response Body
+
+Field Name | Description | Data Type
+--------- | ----------- | -----------
+id | Event Subscription ID | Integer
+callback_uri | The URI to notify when the event occurs | String
+event_type | Type of event subscribed to: `order_completed` | String
+order_id | The order ID | String
+
+
+### POST /event_subscriptions
+
+> Example Request:
+
+```shell
+curl "https://api.zappi.io/v1/event_subscriptions" \
+  -X POST \
+  -H "Authorization: Bearer abcdefghijk" \
+  -H "X-Zappi-Installation": "123456-789-12345-6789-123456" \
+  -d '{"event_subscription": {"callback_uri":"https://api.callback_url.com/","event_type":"order_completed","order_id": 4}}'
+}
+
+```
+
+> Example Response:
+
+```json
+{
+  "event_subscription": {
+    "callback_uri": "https://api.callback_url.com/",
+    "event_type": "order_completed",
+    "id": 1,
+    "order_id": 4
+  }
+}
+```
+
+  Subscribe to an event
+
+#### Request Body
+
+Field Name | Description | Data Type | Required
+--------- | ----------- | ----------- | -----------
+callback_uri | The URI to notify when the event occurs. This URI needs to be whitelisted beforehand. | String | Yes
+event_type | Type of event subscribed to: `order_completed` | Integer | Yes
+order_id | The order ID | Integer | Yes
+
+#### Response Body
+
+Field Name | Description | Data Type
+--------- | ----------- | -----------
+id | Event Subscription ID | Integer
+callback_uri | The URI to notify when the event occurs | String
+event_type | Type of event subscribed to: `order_completed` | String
+order_id | The order ID | String
+
+#### Event Subscription Callback Payload
+
+> Example Event subscription Callback JSON:
+
+```json
+{
+  "callback_uri": "https://api.callback_url.com/url",
+  "event_datetime": "2020-11-25T11:20:00Z",
+  "event_reference": "1-1-1",
+  "event_type": "order_completed",
+  "order_id": 4
+}
+```
+
+Field Name | Description | Data Type
+--------- | ----------- | -----------
+callback_uri | The URI to notify when the event occurs | String
+event_datetime | The URI to notify when the event occurs. This URI needs to be whitelisted beforehand. | DateTime
+event_reference | The unique reference for the event | String
+event_type | Type of event subscribed to: `order_completed` | String
+order_id | The order ID | String
+
+
+### DELETE  /event_subscriptions/{id}
+
+> Example Request:
+
+```shell
+curl "https://api.zappi.io/v1/event_subscriptions/1" \
+  -X DELETE \
+  -H "Authorization: Bearer abcdefghijk" \
+  -H "X-Zappi-Installation": "123456-789-12345-6789-123456"
+}
+
+```
+
+  Deletes an event subscription
 
 ## Orders
 
@@ -286,7 +385,7 @@ description | Product description | String
 
 ```shell
 curl "https://api.zappi.io/v1/orders?limit=2&customer_email=name@domain.com" \
-  -H "Authorization: Bearer abcdefghijk"
+  -H "Authorization: Bearer abcdefghijk" \
   -H "X-Zappi-Installation": "123456-789-12345-6789-123456"
 ```
 
@@ -316,16 +415,16 @@ curl "https://api.zappi.io/v1/orders?limit=2&customer_email=name@domain.com" \
 }
 ```
 
-- Returns the list of orders available to the customer in the customer group
+  Returns the list of orders available to the customer in the customer group
 
-### Query String
+#### Query String
 
 Field Name | Description | Data Type | Required
 --------- | ----------- | ----------- | -----------
 customer_email | The email address of the customer the request is being made on behalf of. | String | Yes
 
 
-### Response Body
+#### Response Body
 
 Field Name | Description | Data Type
 --------- | ----------- | -----------
@@ -339,13 +438,13 @@ analyze_url | The URL that will go to the analysis page of the order on the Zapp
 workspace_id | The workspace ID that the order is in | Integer
 visibility | The visibility of the order: `private`, `public` (available to everyone in the organisation | String
 
-**GET /orders/{id}**
+### GET /orders/{id}
 
 > Example Request:
 
 ```shell
 curl "GET https://api.zappi.io/v1/orders/2?customer_email=name@domain.com" \
-  -H "Authorization: Bearer abcdefghijk"
+  -H "Authorization: Bearer abcdefghijk" \
   -H "X-Zappi-Installation": "123456-789-12345-6789-123456"
 ```
 
@@ -365,36 +464,36 @@ curl "GET https://api.zappi.io/v1/orders/2?customer_email=name@domain.com" \
 }
 ```
 
-- Returns the list of orders available to the customer in the customer group
+  Returns the list of orders available to the customer in the customer group
 
-### Query String
+#### Query String
 
 Field Name | Description | Data Type | Required
 --------- | ----------- | ----------- | -----------
 customer_email | The email address of the customer the request is being made on behalf of. | String | Yes
 
 
-### Response Body
+#### Response Body
 
 Field Name | Description | Data Type
 --------- | ----------- | -----------
 id | Order Id | Integer
-title | Order title | String
-product_id | Product ID | Integer
-country_code | Fieldwork country’s ISO 3166-1 alpha-2 code | String
-status | The status of the order: `configuration`, `processing`, `complete` | String
-configure_url | The URL that will go to the configuration page of the order on the Zappi platform | String
 analyze_url | The URL that will go to the analysis page of the order on the Zappi platform | String
-workspace_id | The workspace ID that the order is in | Integer
+country_code | Fieldwork country’s ISO 3166-1 alpha-2 code | String
+configure_url | The URL that will go to the configuration page of the order on the Zappi platform | String
+product_id | Product ID | Integer
+status | The status of the order: `configuration`, `processing`, `complete` | String
+title | Order title | String
 visibility | The visibility of the order: `private`, `public` (available to everyone in the organisation | String
+workspace_id | The workspace ID that the order is in | Integer
 
-**GET /orders/{id}/deliverables**
+### GET /orders/{id}/deliverables
 
 > Example Request:
 
 ```shell
 curl "https://api.zappi.io/v1/orders/3/deliverables" \
-  -H "Authorization: Bearer abcdefghijk"
+  -H "Authorization: Bearer abcdefghijk" \
   -H "X-Zappi-Installation": "123456-789-12345-6789-123456"
 ```
 
@@ -423,24 +522,36 @@ curl "https://api.zappi.io/v1/orders/3/deliverables" \
 }
 ```
 
-- Returns all the order deliverables
+  Returns all the deliverables for the order
 
-### Response Body
+#### Response Body
 
 Field Name | Description | Data Type
 --------- | ----------- | -----------
 deliverables | List of all deliverables available for the order. URLs will expire after a certain period of time. | JSON
 
+#### Deliverables
 
-**POST /orders/{id}**
+Export Type | Description | Format | Pre-requisite event
+--------- | ----------- | ----------- | -----------
+report | The full report with analysis | `.pdf`, `.pptx`, `.xlsx` | `order_complete`
+survey_metadata | The survey metadata | `.xls` | `order_complete`
+survey_responses | The raw respondent data | `.pdf`, `.pptx` | `order_complete`
+survey_questionnaire | The survey questionnaire | `.pdf` | `order_complete`
+
+<aside class="warning">Please note that, for now, the structure and content of our deliverables is subject to change at Zappi’s discretion and should not be regarded as static or permanent. Please keep this in mind when automatically parsing data from these files.</aside>
+
+
+<br>
+**POST /orders**
 
 > Example Request:
 
 ```shell
 curl "https://api.zappi.io/v1/orders" \
-  -X POST
-  -H "Authorization: Bearer abcdefghijk"
-  -H "X-Zappi-Installation": "123456-789-12345-6789-123456"
+  -X POST \
+  -H "Authorization: Bearer abcdefghijk" \
+  -H "X-Zappi-Installation": "123456-789-12345-6789-123456" \
   -d '{"order":{"product_id":1,"title":"An Order Title", "customer_email":"user@domain.com","workspace_id":1234}'
 }
 
@@ -463,259 +574,101 @@ curl "https://api.zappi.io/v1/orders" \
 }
 ```
 
-- Create an unconfigured order
+  Create an unconfigured order
 
-### Request Body
+#### Request Body
 
 Field Name | Description | Data Type | Required
 --------- | ----------- | ----------- | -----------
+customer_email | Email address of the customer creating the order | String | Yes
 product_id | Product ID | Integer | Yes
 title | The title of the order | String | Yes
-customer_email | Email address of the customer creating the order | String | Yes
 workspace_id | The workspace to create the order under (defaults to the root workspace) | Integer | No
 
-### Response Body
+#### Response Body
 
 Field Name | Description | Data Type
 --------- | ----------- | -----------
 id | Order ID | Integer
-title | Order title | String
-status | The status of the order: `configuration`, `processing`, `complete` | String
-configure_url | The URL that will direct users to the configuration page of the order on the Zappi platform | String
 analyze_url | The URL that will direct users to the analysis page of the order on the Zappi platform | String
-workspace_id | The workspace ID that the order is in | Integer
+configure_url | The URL that will direct users to the configuration page of the order on the Zappi platform | String
+status | The status of the order: `configuration`, `processing`, `complete` | String
+title | Order title | String
 visibility | The visibility of the order: `private`, `public` (available to everyone in the organisation | String
-
-## Event Subscriptions
-
-**GET /event_subscriptions**
-
-- Returns the list of event subscriptions.
-
-### Response Body
-
-Field Name | Description | Data Type
---------- | ----------- | -----------
-id | Event Subscription ID | Integer
-event_type | Type of event subscribed to: `order_completed` | String
-order_id | The order ID | String
-callback_uri | The URI to notify when the event occurs | String
+workspace_id | The workspace ID that the order is in | Integer
 
 
-**GET /event_subscriptions/{id}**
 
-- Event subscription details
+## Products
 
-Response
-Same fields as GET /event_subscriptions response
+### GET /products
 
+> Example Request:
 
-**POST /event_subscriptions**
+```shell
+curl "http://api.zappi.io/v1/products" \
+  -H "Authorization: Bearer abcdefghijk" \
+  -H "X-Zappi-Installation": "123456-789-12345-6789-123456"
+```
 
-- Subscribe to an event
+> Example Response:
 
-### Request Body
+```json
+{
+    "next_cursor": 3,
+    "products": [
+        {
+            "description": "A product description.",
+            "id": 2,
+            "name": "Product 2"
+        },
+        {
+            "description": "Another product description.",
+            "id": 3,
+            "name": "Product 3"
+        }
+    ]
+}
+```
 
-Field Name | Description | Data Type | Required
---------- | ----------- | ----------- | -----------
-event_type | Type of event subscribed to: `order_completed` | Integer | Yes
-order_id | The order ID | Integer | Yes
-callback_uri | The URI to notify when the event occurs. This URI needs to be whitelisted beforehand. | String | Yes
+  Returns the list of products available for the customer group
 
-### Response Body
-
-Field Name | Description | Data Type
---------- | ----------- | -----------
-id | Event Subscription ID | Integer
-event_type | Type of event subscribed to: `order_completed` | String
-order_id | The order ID | String
-callback_uri | The URI to notify when the event occurs | String
-
-### Event Subscription Callback Payload
+#### Response Body
 
 Field Name | Description | Data Type
 --------- | ----------- | -----------
-event_type | Type of event subscribed to: `order_completed` | String
-order_id | The order ID | String
-callback_uri | The URI to notify when the event occurs | String
-event_datetime | The URI to notify when the event occurs. This URI needs to be whitelisted beforehand. | DateTime
-event_reference | The unique reference for the event | String
+id | Product ID | Integer
+name | Product Name | String
+description | Product description | String
 
-
-**DELETE  /event_subscriptions/{id}**
-
-- Deletes an event subscription
-
-
-## Workspaces
+### Workspaces
 
 **GET /workspaces**
 
-- Workspace details.
+  Workspace details.
 
-### Query String
+#### Query String
 
 Field Name | Description | Data Type | Required
 --------- | ----------- | ----------- | -----------
 customer_email | The email address of the customer the request is being made on behalf of. | String | Yes
 
-### Response Body
+#### Response Body
 
 Field Name | Description | Data Type
 --------- | ----------- | -----------
 id | Workspace ID | Integer
+children | The child workspaces for this workspace | String
 label | Workspace title | String
-children | TThe child workspaces for this workspace | String
 
-## Webhook Security
-
-All requests made by Zappi to the provided callback_uri will have a hash signature with each payload. This hash signature is passed along in the headers as X-Zappi-Signature. The HMAC hexdigest will be used to compute the hash.
-
-## Event Types
+# Event Types
 
 Event Type | Description
 --------- | -----------
 order_complete | The order is completed. All survey responses have been collected. The report has been generated and is published on the platform. All deliverables have been uploaded to AWS S3.
 
-## Deliverables
+# Webhook Security
 
-Export Type | Description | Format | Pre-requisite event
---------- | ----------- | ----------- | -----------
-survey_questionnaire | The survey questionnaire | `.pdf` | `order_complete`
-report | The full report with analysis | `.pdf`, `.pptx`, `.xlsx` | `order_complete`
-survey_responses | The raw respondent data | `.pdf`, `.pptx` | `order_complete`
-survey_metadata | The survey metadata | `.xls` | `order_complete`
+All requests made by Zappi to the provided callback_uri will have a hash signature with each payload. This hash signature is passed along in the headers as X-Zappi-Signature. The HMAC hexdigest will be used to compute the hash.
 
-<aside class="warning">Please note that, for now, the structure and content of our deliverables is subject to change at Zappi’s discretion and should not be regarded as static or permanent. Please keep this in mind when automatically parsing data from these files.</aside>
-
-
-> To authorize, use this code:
-
-```shell
-# With shell, you can just pass the correct header with each request
-curl "api_endpoint_here" \
-  -H "Authorization: meowmeowmeow"
-```
-
-> Make sure to replace `meowmeowmeow` with your API key.
-
-Kittn uses API keys to allow access to the API. You can register a new Kittn API key at our [developer portal](http://example.com/developers).
-
-Kittn expects for the API key to be included in all API requests to the server in a header that looks like the following:
-
-`Authorization: meowmeowmeow`
-
-<aside class="notice">
-You must replace <code>meowmeowmeow</code> with your personal API key.
-</aside>
-
-# Kittens
-
-## Get All Kittens
-
-```shell
-curl "http://example.com/api/kittens" \
-  -H "Authorization: meowmeowmeow"
-```
-
-> The above command returns JSON structured like this:
-
-```json
-[
-  {
-    "id": 1,
-    "name": "Fluffums",
-    "breed": "calico",
-    "fluffiness": 6,
-    "cuteness": 7
-  },
-  {
-    "id": 2,
-    "name": "Max",
-    "breed": "unknown",
-    "fluffiness": 5,
-    "cuteness": 10
-  }
-]
-```
-
-This endpoint retrieves all kittens.
-
-### HTTP Request
-
-`GET http://example.com/api/kittens`
-
-### Query Parameters
-
-Parameter | Default | Description
---------- | ------- | -----------
-include_cats | false | If set to true, the result will also include cats.
-available | true | If set to false, the result will include kittens that have already been adopted.
-
-<aside class="success">
-Remember — a happy kitten is an authenticated kitten!
-</aside>
-
-## Get a Specific Kitten
-
-
-```shell
-curl "http://example.com/api/kittens/2" \
-  -H "Authorization: meowmeowmeow"
-```
-
-> The above command returns JSON structured like this:
-
-```json
-{
-  "id": 2,
-  "name": "Max",
-  "breed": "unknown",
-  "fluffiness": 5,
-  "cuteness": 10
-}
-```
-
-This endpoint retrieves a specific kitten.
-
-<aside class="warning">Inside HTML code blocks like this one, you can't use Markdown, so use <code>&lt;code&gt;</code> blocks to denote code.</aside>
-
-### HTTP Request
-
-`GET http://example.com/kittens/<ID>`
-
-### URL Parameters
-
-Parameter | Description
---------- | -----------
-ID | The ID of the kitten to retrieve
-
-## Delete a Specific Kitten
-
-```shell
-curl "http://example.com/api/kittens/2" \
-  -X DELETE \
-  -H "Authorization: meowmeowmeow"
-```
-
-> The above command returns JSON structured like this:
-
-```json
-{
-  "id": 2,
-  "deleted" : ":("
-}
-```
-
-This endpoint deletes a specific kitten.
-
-### HTTP Request
-
-`DELETE http://example.com/kittens/<ID>`
-
-### URL Parameters
-
-Parameter | Description
---------- | -----------
-ID | The ID of the kitten to delete
 

@@ -1,22 +1,18 @@
-# Errors
+# Error Codes
 
-<aside class="notice">
-This error section is stored in a separate file in <code>includes/_errors.md</code>. Slate allows you to optionally separate out your docs into many files...just save them to the <code>includes</code> folder and add them to the top of your <code>index.md</code>'s frontmatter. Files are included in the order listed.
-</aside>
+The Zappi API uses the following error codes:
 
-The Kittn API uses the following error codes:
-
-
-Error Code | Meaning
----------- | -------
-400 | Bad Request -- Your request is invalid.
-401 | Unauthorized -- Your API key is wrong.
-403 | Forbidden -- The kitten requested is hidden for administrators only.
-404 | Not Found -- The specified kitten could not be found.
-405 | Method Not Allowed -- You tried to access a kitten with an invalid method.
-406 | Not Acceptable -- You requested a format that isn't json.
-410 | Gone -- The kitten requested has been removed from our servers.
-418 | I'm a teapot.
-429 | Too Many Requests -- You're requesting too many kittens! Slow down!
-500 | Internal Server Error -- We had a problem with our server. Try again later.
-503 | Service Unavailable -- We're temporarily offline for maintenance. Please try again later.
+Error Code | HTTP Status Code | Error Message
+--------- | ----------- | -----------
+1000 | 400 | Unable to process the request. Invalid input.
+1002 | 400 | Unable to process the request. Invalid request headers.
+1010 | 401 | Invalid credentials. Integration does not exist.
+1011 | 401 | Access token expired.
+1012 | 401 | Access token invalid.
+1020 | 403 | Not permitted to access this resource.
+1021 | 403 | Request could not be processed.
+1030 | 404 | Resource not found.
+1031 | 409 | The requested resource already exists.
+1050 | 429 | Rate limit reached. Please try again later.
+1060 | 500 | Internal server error. Unable to process request.
+1061 | 503 | Service unavailable.

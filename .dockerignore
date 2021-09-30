@@ -1,2 +1,9 @@
-build/
-.github/
+*
+
+!lib/
+!source/
+!.ruby-version
+!Gemfile
+!Gemfile.lock
+!config.rb
+

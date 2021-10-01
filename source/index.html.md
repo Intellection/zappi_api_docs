@@ -33,12 +33,12 @@ Added ‘visibility’ to the order payload.
 
 ## 19 July 2021
 
-Added ‘workspace_id’ as an optional parameter on `POST /orders.`
-Added ‘workspace_id’ to the order payload.
+Added `workspace_id` as an optional parameter on `POST /orders.`
+Added `workspace_id` to the order payload.
 
 ## 14 July 2021
 
-Added ‘root_workspace_id’ to `GET public_integrations/identity` payload.
+Added `root_workspace_id` to `GET public_integrations/identity` payload.
 Added `GET /workspaces/{id}` endpoint.
 
 ## 15 April 2021

@@ -53,10 +53,6 @@ Added `product_id` and `country_code` to the order payload.
 # API Overview
 
 Zappi allows 3rd parties to create public integrations on our platform. This will allow other companies and developers to build integrations which can be installed by different customer groups. All public integrations will need to be reviewed and approved by Zappi. Access tokens for public integrations will expire, and will need to be regenerated when necessary, using the client credentials oAuth flow. In order to make use of a public integration, a customer group will need to install it. Public integrations can be uninstalled at any point in time.
-Public Integrations
-In order for a public integration to be made available, the 3rd-party would need to register this public integration on our platform.
-
-Public Integrations will need to be reviewed and approved by Zappi. Once an integration has been approved by Zappi, this integration will be made available to customers on the platform.
 
 ## Public Integrations
 

@@ -76,6 +76,7 @@ html, body {
     display: block;
     max-width: 100%;
     margin-bottom: $logo-margin;
+    margin-top: 15px;
   }
 
   &>.search {
@@ -174,6 +175,15 @@ html, body {
     font-size: 12px;
   }
 
+  .toc-list-h3 {
+    background-color: $nav-subitem-bg;
+  }
+
+  .toc-h3 {
+    padding-left: $nav-padding + $nav-padding + $nav-indent;
+    font-size: 12px;
+  }
+
   .toc-footer {
     padding: 1em 0;
     margin-top: 1em;
@@ -199,14 +209,13 @@ html, body {
 .toc-link, .toc-footer li {
   padding: 0 $nav-padding 0 $nav-padding;
   display: block;
-  overflow-x: hidden;
-  white-space: nowrap;
   text-overflow: ellipsis;
   text-decoration: none;
   color: $nav-text;
   transition-property: background;
   transition-timing-function: linear;
   transition-duration: 130ms;
+  word-wrap: break-word;
 }
 
 // button to show navigation on mobile devices
@@ -341,7 +350,7 @@ html, body {
   }
 
   // the div is the tocify hidden div for placeholding stuff
-  &>h1, &>h2, &>div {
+  &>h1, &>h2, &>h3, &>div {
     clear:both;
   }
 
@@ -372,6 +381,15 @@ html, body {
     padding-bottom: 1.2em;
     background-image: linear-gradient(to bottom, rgba(#fff, 0.2), rgba(#fff, 0));
   }
+  h3 {
+    @extend %header-font;
+    font-size: 16px;
+    margin-top: 0.5em;
+    margin-bottom: 0;
+    padding-top: 1.2em;
+    padding-bottom: 1.2em;
+    background-image: linear-gradient(to bottom, rgba(#fff, 0.2), rgba(#fff, 0));
+  }
 
   // h2s right after h1s should bump right up
   // against the h1s.
@@ -380,14 +398,18 @@ html, body {
     border-top: none;
   }
 
-  h3, h4, h5, h6 {
+  h4, h5, h6 {
     @extend %header-font;
     font-size: 15px;
     margin-top: 2.5em;
     margin-bottom: 0.8em;
   }
 
-  h4, h5, h6 {
+  h4 {
+    font-size: 15px;
+  }
+
+  h5, h6 {
     font-size: 10px;
   }
 
@@ -413,6 +435,7 @@ html, body {
       padding: 5px 10px;
       border-bottom: 1px solid #ccc;
       vertical-align: bottom;
+      background-color: #B3B3B3;
     }
 
     td {

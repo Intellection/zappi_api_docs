@@ -1,0 +1,11 @@
+version: "2.2"
+services:
+  app:
+    image: ${IMAGE_NAME}:${VERSION}
+    command:
+      - bundle
+      - exec
+      - middleman
+      - serve
+    ports:
+      - 4567

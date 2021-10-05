@@ -1,29 +1,48 @@
-FROM ruby:2.6-slim
+FROM 659153740712.dkr.ecr.us-east-1.amazonaws.com/zappi/base/zappi-api-docs:1.0.0
 
-WORKDIR /srv/slate
+# ARGs & ENVs
+ARG APP_USER="app"
+ENV HOME="/home/${APP_USER}" \
+    BUNDLE_PATH="/srv/bundle"
+ARG CODE_PATH="/srv/code"
 
-VOLUME /srv/slate/build
-VOLUME /srv/slate/source
+# User
+RUN groupadd -g 9999 ${APP_USER} && \
+    useradd --system --create-home -u 9999 -g 9999 ${APP_USER} && \
+    mkdir -p ${BUNDLE_PATH} ${CODE_PATH}
 
-EXPOSE 4567
+WORKDIR ${CODE_PATH}
 
-COPY Gemfile .
-COPY Gemfile.lock .
+# Cache, install & clean ruby gem dependencies
+COPY Gemfile Gemfile.lock ./
+RUN export BUNDLER_VERSION=$(cat Gemfile.lock | tail -1 | tr -d "[:space:]") && \
+    gem install bundler -v "${BUNDLER_VERSION}" && \
+    bundle config set frozen 'true' && \
+    bundle config set without "test development" && \
+    bundle install --jobs 8 --retry 3 && \
+    rm -rf ${BUNDLE_PATH}/{cache,ruby/*/cache}
 
-RUN apt-get update \
-    && apt-get install -y --no-install-recommends \
-        build-essential \
-        git \
-        nodejs \
-    && gem install bundler \
-    && bundle install \
-    && apt-get remove -y build-essential git \
-    && apt-get autoremove -y \
-    && rm -rf /var/lib/apt/lists/*
+ADD . ${CODE_PATH}
 
-COPY . /srv/slate
+# Generate static files from raw docs
+RUN bundle exec middleman build
 
-RUN chmod +x /srv/slate/slate.sh
+# Fix permission issue - Nginx
+RUN touch /var/run/nginx.pid && \
+    chown -R ${APP_USER}:${APP_USER} /var/run/nginx.pid && \
+    chown -R ${APP_USER}:${APP_USER} /var/cache/nginx && \
+    chown -R ${APP_USER}:${APP_USER} /var/log/nginx && \
+    chown -R ${APP_USER}:${APP_USER} /etc/nginx/conf.d
 
-ENTRYPOINT ["/srv/slate/slate.sh"]
-CMD ["build"]
+# Forward request and error logs to docker log collector
+RUN ln -sf /dev/stdout /var/log/nginx/access.log && \
+    ln -sf /dev/stderr /var/log/nginx/error.log
+
+ARG GIT_RELEASE
+ENV GIT_RELEASE="${GIT_RELEASE:-unset}"
+
+# Gracefully shutdown nginx
+STOPSIGNAL SIGQUIT
+
+# Run as app
+USER ${APP_USER}:${APP_USER}

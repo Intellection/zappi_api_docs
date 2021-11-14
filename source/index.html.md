@@ -27,9 +27,13 @@ Please note that as we are still finalizing our API, this spec is subject to cha
 
 # Change Log
 
+## 15 November 2021
+
+Added `visibility` to the `GET order/{id}/deliverables` payload.
+
 ## 16 August 2021
 
-Added ‘visibility’ to the order payload.
+Added `visibility` to the order payload.
 
 ## 19 July 2021
 
@@ -500,20 +504,24 @@ curl "https://api.zappi.io/v1/orders/3/deliverables" \
     "deliverables": {
         "report": {
             "pdf": "https://s3.amazonaws.com/zappi.api-exports/production/3/report_3.pdf?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=A123456%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20201202T103901Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=123456",
-            "pptx": "https://s3.amazonaws.com/zappi.api-exports/production/3/report_3.pptx?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=A123456%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20201202T103901Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=123456"
+            "pptx": "https://s3.amazonaws.com/zappi.api-exports/production/3/report_3.pptx?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=A123456%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20201202T103901Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=123456",
+            "visibility": "public"
         },
         "survey_questionnaires": {
             "pdf": [
                 "https://s3.amazonaws.com/zappi.api-exports/production/3/3/survey_questionnaire_1_3.pdf?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=A123456%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20201202T103901Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=123456"
-            ]
+            ],
+            "visibility": "private"
         },
         "survey_respondent_data": {
             "csv": "https://s3.amazonaws.com/zappi.api-exports/production/3/survey_respondent_data_3.csv?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=A123456%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20201202T103901Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=123456",
-            "sav": "https://s3.amazonaws.com/zappi.api-exports/production/3/survey_respondent_data_3.sav?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=A123456%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20201202T103901Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=123456"
+            "sav": "https://s3.amazonaws.com/zappi.api-exports/production/3/survey_respondent_data_3.sav?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=A123456%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20201202T103901Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=123456",
+            "visibility": "public"
         },
         "survey_metadata": {
            "xlsx":
-"https://s3.amazonaws.com/zappi.api-exports/production/3/survey_metadata_3.xlxs?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=A123456%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20201202T103901Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=123456"
+"https://s3.amazonaws.com/zappi.api-exports/production/3/survey_metadata_3.xlxs?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=A123456%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20201202T103901Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=123456",
+            "visibility": "public"
     }
 }
 ```
@@ -662,6 +670,15 @@ label | Workspace title | String
 Event Type | Description
 --------- | -----------
 order_complete | The order is completed. All survey responses have been collected. The report has been generated and is published on the platform. All deliverables have been uploaded to AWS S3.
+
+# Visibility
+
+Visibility Type | Description
+--------- | -----------
+private | The entity has not been shared with the organisation but may be shared with individual users and user groups.
+public | The entity has been shared with the entire organisation.
+
+The visibility is determined by the sharing options assigned on the platform.
 
 # Webhook Security
 

@@ -712,7 +712,7 @@ curl "http://api.zappi.io/v1/workspaces/12345" \
             }
         ],
         "id": 12345,
-        "label": "root_workspace"
+        "label": "root workspace"
     }
 }
 ```

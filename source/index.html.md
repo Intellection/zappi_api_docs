@@ -362,7 +362,7 @@ event_type | Type of event subscribed to: `order_completed` | String
 order_id | The order ID | String
 
 
-### DELETE  /event_subscriptions/{id}
+### DELETE /event_subscriptions/{id}
 
 > Example Request:
 
@@ -379,7 +379,7 @@ curl "https://api.zappi.io/v1/event_subscriptions/1" \
 
 ## Orders
 
-**GET /orders**
+### GET /orders
 
 > Example Request:
 
@@ -547,7 +547,8 @@ survey_questionnaire | The survey questionnaire | `.pdf` | `order_complete`
 
 
 <br>
-**POST /orders**
+
+### POST /orders
 
 > Example Request:
 
@@ -645,9 +646,76 @@ id | Product ID | Integer
 name | Product Name | String
 description | Product description | String
 
-### Workspaces
+## Workspaces
 
-**GET /workspaces**
+### GET /workspaces/{id}
+
+> Example Request:
+
+```shell
+curl "http://api.zappi.io/v1/workspaces/12345" \
+  -H "Authorization: Bearer abcdefghijk" \
+  -H "X-Zappi-Installation": "123456-789-12345-6789-123456"
+```
+
+> Example Response:
+
+```json
+{
+    "workspace": {
+        "children": [
+            {
+                "children": [],
+                "id": 1,
+                "label": "worspace 1"
+            },
+            {
+                "children": [],
+                "id": 2,
+                "label": "workspace 2"
+            },
+            {
+                "children": [],
+                "id": 3,
+                "label": "workspace 3"
+            },
+            {
+                "children": [
+                    {
+                        "children": [],
+                        "id": 4,
+                        "label": "workjspace 4"
+                    },
+                    {
+                        "children": [],
+                        "id": 5,
+                        "label": "workspace 5"
+                    },
+                    {
+                        "children": [],
+                        "id": 6,
+                        "label": "workspace 6"
+                    },
+                    {
+                        "children": [],
+                        "id": 7,
+                        "label": "workspace 7"
+                    },
+                    {
+                        "children": [],
+                        "id": 8,
+                        "label": "workspace 8"
+                    }
+                ],
+                "id": 9,
+                "label": "workspace 9"
+            }
+        ],
+        "id": 12345,
+        "label": "root workspace"
+    }
+}
+```
 
   Workspace details.
 

@@ -27,6 +27,10 @@ Please note that as we are still finalizing our API, this spec is subject to cha
 
 # Change Log
 
+## 7 December 2021
+
+Added `customer_hashed_email_address` to the order payload.
+
 ## 15 November 2021
 
 Added `visibility` to the `GET order/{id}/deliverables` payload.
@@ -400,7 +404,12 @@ curl "https://api.zappi.io/v1/orders?limit=2&customer_email=name@domain.com" \
             "configure_url": "",
             "id": 1,
             "status": "processing",
-            "title": "An order title"
+            "title": "An order title",
+            "workspace_id": 1234,
+            "visibility": "public",
+            "metadata": {
+              "customer_hashed_email_address": "abcdefghijklmnopq12345"
+            }
         },
         {
             "analyze_url": "https://subdomain.zappi.io/project_setup/zappi-product-test/2/analyze_project",
@@ -409,7 +418,10 @@ curl "https://api.zappi.io/v1/orders?limit=2&customer_email=name@domain.com" \
             "status": "configuration",
             "title": "Another order title",
             "workspace_id": 1234,
-            "visibility": "public"
+            "visibility": "public",
+            "metadata": {
+              "customer_hashed_email_address": "abcdefghijklmnopq12345"
+            }
         }
     ]
 }
@@ -437,6 +449,13 @@ configure_url | The URL that will go to the configuration page of the order on t
 analyze_url | The URL that will go to the analysis page of the order on the Zappi platform | String
 workspace_id | The workspace ID that the order is in | Integer
 visibility | The visibility of the order: `private`, `public` (available to everyone in the organisation | String
+metadata | Extra data pertaining to the order | Object
+
+#### Order Metadata
+
+Field Name | Description | Data Type
+--------- | ----------- | -----------
+customer_hashed_email_address | SHA 256 hash of the customer email address | String
 
 ### GET /orders/{id}
 
@@ -459,7 +478,10 @@ curl "GET https://api.zappi.io/v1/orders/2?customer_email=name@domain.com" \
         "status": "configuration",
         "title": "Another order title",
         "workspace_id": 1234,
-        "visibility": "public"
+        "visibility": "public",
+        "metadata": {
+          "customer_hashed_email_address": "abcdefghijklmnopq12345"
+        }
     }
 }
 ```
@@ -574,7 +596,10 @@ curl "https://api.zappi.io/v1/orders" \
         "title": "An Order Title",
         "title": "An Order Title",
         "workspace_id": 1,
-        "visibility": "public"
+        "visibility": "public",
+        "metadata": {
+          "customer_hashed_email_address": "abcdefghijklmnopq12345"
+        }
     }
 }
 ```

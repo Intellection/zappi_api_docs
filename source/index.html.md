@@ -510,6 +510,7 @@ status | The status of the order: `configuration`, `processing`, `complete` | St
 title | Order title | String
 visibility | The visibility of the order: `private`, `public` (available to everyone in the organisation | String
 workspace_id | The workspace ID that the order is in | Integer
+metadata | Extra data pertaining to the order | Object
 
 ### GET /orders/{id}/deliverables
 
@@ -628,8 +629,7 @@ status | The status of the order: `configuration`, `processing`, `complete` | St
 title | Order title | String
 visibility | The visibility of the order: `private`, `public` (available to everyone in the organisation | String
 workspace_id | The workspace ID that the order is in | Integer
-
-
+metadata | Extra data pertaining to the order | Object
 
 ## Products
 

@@ -29,7 +29,7 @@ Please note that as we are still finalizing our API, this spec is subject to cha
 
 ## 7 December 2021
 
-Added `customer_hashed_email_address` to the order payload.
+Added `customer_hashed_email_address` to the order payload, as part of the metadata object.
 
 ## 15 November 2021
 

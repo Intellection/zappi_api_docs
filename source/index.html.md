@@ -597,7 +597,6 @@ curl "https://api.zappi.io/v1/orders" \
         "id": 4,
         "status": "configuration",
         "title": "An Order Title",
-        "title": "An Order Title",
         "workspace_id": 1,
         "visibility": "public",
         "metadata": {

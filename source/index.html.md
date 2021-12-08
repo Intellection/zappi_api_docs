@@ -455,7 +455,9 @@ metadata | Extra data pertaining to the order | Object
 
 Field Name | Description | Data Type
 --------- | ----------- | -----------
-customer_hashed_email_address | SHA 256 hash of the customer email address | String
+customer_hashed_email_address | The SHA 256 hash of the customer email address. Base16 encoded. All lower case | String
+
+For the customer email address "name.surname@domain.com", the hash provided via API would be "b3204d933a7eb98d6f7ed8dbab916a885692a6d78f6f67deb185710c7cd05cee".
 
 ### GET /orders/{id}
 

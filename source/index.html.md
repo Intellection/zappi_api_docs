@@ -27,7 +27,7 @@ Please note that as we are still finalizing our API, this spec is subject to cha
 
 # Change Log
 
-## 7 December 2021
+## 9 December 2021
 
 Added `customer_hashed_email_address` to the order payload, as part of the metadata object.
 

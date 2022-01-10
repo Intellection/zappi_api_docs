@@ -27,6 +27,10 @@ Please note that as we are still finalizing our API, this spec is subject to cha
 
 # Change Log
 
+## 10 January 2022
+
+Added `deliverables_last_updated_at` to the order payload, as part of the metadata object.
+
 ## 9 December 2021
 
 Added `customer_hashed_email_address` to the order payload, as part of the metadata object.
@@ -100,7 +104,7 @@ Once a Public Integration is installed on a subdomain, the Public Integration wi
 > Example Request:
 
 ```shell
-curl "http://api.zappi.io/v1/public_integrations" \
+curl "http://api.zappi.io/v1/public_integrations/authorize" \
   -H "Authorization: Basic 12345 " \
 ```
 
@@ -408,7 +412,8 @@ curl "https://api.zappi.io/v1/orders?limit=2&customer_email=name@domain.com" \
             "workspace_id": 1234,
             "visibility": "public",
             "metadata": {
-              "customer_hashed_email_address": "abcdefghijklmnopq12345"
+              "customer_hashed_email_address": "abcdefghijklmnopq12345",
+              "deliverables_last_updated_at": "2021-12-30T11:46:15Z"
             }
         },
         {
@@ -420,7 +425,8 @@ curl "https://api.zappi.io/v1/orders?limit=2&customer_email=name@domain.com" \
             "workspace_id": 1234,
             "visibility": "public",
             "metadata": {
-              "customer_hashed_email_address": "abcdefghijklmnopq12345"
+              "customer_hashed_email_address": "abcdefghijklmnopq12345",
+              "deliverables_last_updated_at": "2021-12-30T11:48:19Z"
             }
         }
     ]
@@ -456,6 +462,7 @@ metadata | Extra data pertaining to the order | Object
 Field Name | Description | Data Type
 --------- | ----------- | -----------
 customer_hashed_email_address | The SHA 256 hash of the customer email address. Base16 encoded. All lower case | String
+deliverables_last_updated_at | The ISO8601 timestamp of the most recent generation of deliverables for the order. | DateTime
 
 For the customer email address "name.surname@domain.com", the hash provided via API would be "b3204d933a7eb98d6f7ed8dbab916a885692a6d78f6f67deb185710c7cd05cee".
 
@@ -482,7 +489,8 @@ curl "GET https://api.zappi.io/v1/orders/2?customer_email=name@domain.com" \
         "workspace_id": 1234,
         "visibility": "public",
         "metadata": {
-          "customer_hashed_email_address": "abcdefghijklmnopq12345"
+          "customer_hashed_email_address": "abcdefghijklmnopq12345",
+          "deliverables_last_updated_at": "2021-12-30T11:48:19Z"
         }
     }
 }
@@ -600,7 +608,8 @@ curl "https://api.zappi.io/v1/orders" \
         "workspace_id": 1,
         "visibility": "public",
         "metadata": {
-          "customer_hashed_email_address": "abcdefghijklmnopq12345"
+          "customer_hashed_email_address": "abcdefghijklmnopq12345",
+          "deliverables_last_updated_at": "2021-12-30T11:48:19Z"
         }
     }
 }

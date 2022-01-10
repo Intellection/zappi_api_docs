@@ -27,7 +27,7 @@ Please note that as we are still finalizing our API, this spec is subject to cha
 
 # Change Log
 
-## 4 January 2022
+## 10 January 2022
 
 Added `deliverables_last_updated_at` to the order payload, as part of the metadata object.
 

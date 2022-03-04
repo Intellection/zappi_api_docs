@@ -411,6 +411,8 @@ curl "https://api.zappi.io/v1/orders?limit=2&customer_email=name@domain.com" \
             "title": "An order title",
             "workspace_id": 1234,
             "visibility": "public",
+            "product_id": 4,
+            "country_code": "US",
             "metadata": {
               "customer_hashed_email_address": "abcdefghijklmnopq12345",
               "deliverables_last_updated_at": "2021-12-30T11:46:15Z"
@@ -424,6 +426,8 @@ curl "https://api.zappi.io/v1/orders?limit=2&customer_email=name@domain.com" \
             "title": "Another order title",
             "workspace_id": 1234,
             "visibility": "public",
+            "product_id": 3,
+            "country_code": "GB",
             "metadata": {
               "customer_hashed_email_address": "abcdefghijklmnopq12345",
               "deliverables_last_updated_at": "2021-12-30T11:48:19Z"
@@ -488,6 +492,8 @@ curl "GET https://api.zappi.io/v1/orders/2?customer_email=name@domain.com" \
         "title": "Another order title",
         "workspace_id": 1234,
         "visibility": "public",
+        "product_id": 4,
+        "country_code": "US",
         "metadata": {
           "customer_hashed_email_address": "abcdefghijklmnopq12345",
           "deliverables_last_updated_at": "2021-12-30T11:48:19Z"
@@ -635,6 +641,8 @@ analyze_url | The URL that will direct users to the analysis page of the order o
 configure_url | The URL that will direct users to the configuration page of the order on the Zappi platform | String
 status | The status of the order: `configuration`, `processing`, `complete` | String
 title | Order title | String
+product_id | Product ID | Integer
+country_code | Fieldwork country’s ISO 3166-1 alpha-2 code | String
 visibility | The visibility of the order: `private`, `public` (available to everyone in the organisation | String
 workspace_id | The workspace ID that the order is in | Integer
 metadata | Extra data pertaining to the order | Object

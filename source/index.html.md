@@ -543,6 +543,7 @@ curl "https://api.zappi.io/v1/orders/3/deliverables" \
     "deliverables": {
         "report": {
             "pdf": "https://s3.amazonaws.com/zappi.api-exports/production/3/report_3.pdf?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=A123456%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20201202T103901Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=123456",
+            "xlsx": "https://s3.amazonaws.com/zappi.api-exports/production/3/report_3.xlsx?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=A123456%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20201202T103901Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=123456",
             "pptx": "https://s3.amazonaws.com/zappi.api-exports/production/3/report_3.pptx?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=A123456%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20201202T103901Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=123456",
             "visibility": "public"
         },

@@ -29,7 +29,7 @@ Please note that as we are still finalizing our API, this spec is subject to cha
 
 ## 5 April 2022
 
-Added `workspace_id` optional query parameter to the GET /products endpoint.
+Added `workspace_id` optional query parameter to the `GET /products` endpoint.
 
 ## 10 January 2022
 

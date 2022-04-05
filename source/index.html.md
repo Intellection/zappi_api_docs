@@ -27,6 +27,10 @@ Please note that as we are still finalizing our API, this spec is subject to cha
 
 # Change Log
 
+## 5 April 2022
+
+Added `workspace_id` optional query parameter to the GET /products endpoint.
+
 ## 10 January 2022
 
 Added `deliverables_last_updated_at` to the order payload, as part of the metadata object.

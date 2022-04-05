@@ -655,7 +655,7 @@ metadata | Extra data pertaining to the order | Object
 > Example Request:
 
 ```shell
-curl "http://api.zappi.io/v1/products" \
+curl "http://api.zappi.io/v1/products?workspace_id=1234" \
   -H "Authorization: Bearer abcdefghijk" \
   -H "X-Zappi-Installation": "123456-789-12345-6789-123456"
 ```
@@ -679,6 +679,12 @@ curl "http://api.zappi.io/v1/products" \
     ]
 }
 ```
+
+#### Query String
+
+Field Name | Description | Data Type | Required
+--------- | ----------- | ----------- | -----------
+workspace_id | The workspace ID to fetch available products for. Defaults to the customer's root workspace. | Integer | No
 
   Returns the list of products available for the customer group
 

@@ -27,6 +27,10 @@ Please note that as we are still finalizing our API, this spec is subject to cha
 
 # Change Log
 
+## 5 April 2022
+
+Added `workspace_id` optional query parameter to the `GET /products` endpoint.
+
 ## 10 January 2022
 
 Added `deliverables_last_updated_at` to the order payload, as part of the metadata object.
@@ -655,7 +659,7 @@ metadata | Extra data pertaining to the order | Object
 > Example Request:
 
 ```shell
-curl "http://api.zappi.io/v1/products" \
+curl "http://api.zappi.io/v1/products?workspace_id=1234" \
   -H "Authorization: Bearer abcdefghijk" \
   -H "X-Zappi-Installation": "123456-789-12345-6789-123456"
 ```
@@ -679,6 +683,12 @@ curl "http://api.zappi.io/v1/products" \
     ]
 }
 ```
+
+#### Query String
+
+Field Name | Description | Data Type | Required
+--------- | ----------- | ----------- | -----------
+workspace_id | The workspace ID to fetch available products for. Defaults to the customer's root workspace. | Integer | No
 
   Returns the list of products available for the customer group
 

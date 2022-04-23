@@ -5,7 +5,7 @@ language_tabs: # must be one of https://git.io/vQNgJ
   - shell
 
 toc_footers:
-  - Contact <a href="mailto:support@zappi.com"> support@zappi.com</a> for API Credentials
+  - Contact <a href="mailto:support@zappistore.com"> support@zappistore.com</a> for API Credentials
 
 includes:
   - errors

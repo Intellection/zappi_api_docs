@@ -29,7 +29,7 @@ Please note that as we are still finalizing our API, this spec is subject to cha
 
 ## 9 May 2022
 
-Increased the number of requests per second allowed for many endpoints.
+Increased rate limit for numerous endpoints.
 
 ## 5 April 2022
 

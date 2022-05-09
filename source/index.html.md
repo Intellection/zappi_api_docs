@@ -27,6 +27,10 @@ Please note that as we are still finalizing our API, this spec is subject to cha
 
 # Change Log
 
+## 9 May 2022
+
+Increased the number of requests per second allowed for many endpoints.
+
 ## 5 April 2022
 
 Added `workspace_id` optional query parameter to the `GET /products` endpoint.
@@ -202,18 +206,18 @@ read_workspaces | View workspaces | View workspaces belonging to the Customer an
 
 Max Requests | Interval (seconds) | Endpoints
 --------- | ----------- | -----------
-10 | 60 | GET /event_subscriptions
+60 | 60 | GET /event_subscriptions
 5 | 60 | POST /event_subscriptions
-10 | 60 | GET /event_subscriptions/{id}
-10 | 60 | DELETE /event_subscriptions/{id}
-20 | 60 | GET /orders
-10 | 60 | GET /orders/{id}
-10 |60 | GET /orders/{id}/delverables
+60 | 60 | GET /event_subscriptions/{id}
+60 | 60 | DELETE /event_subscriptions/{id}
+60 | 60 | GET /orders
+60 | 60 | GET /orders/{id}
+60 |60 | GET /orders/{id}/delverables
 5 | 60 | POST /orders
-10 | 60 | GET /products
+60 | 60 | GET /products
 1 | 300 | POST /public_integrations/authorize
-10 | 60 | GET /public_integrations/identity
-10 | 60 | GET /workspaces/{id}
+60 | 60 | GET /public_integrations/identity
+60 | 60 | GET /workspaces/{id}
 
 
 # Pagination

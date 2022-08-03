@@ -443,7 +443,7 @@ curl "https://api.zappi.io/v1/orders?limit=2&customer_email=name@domain.com" \
             "country_code": "GB",
             "metadata": {
               "customer_hashed_email_address": "abcdefghijklmnopq12345",
-              "deliverables_last_updated_at": "2021-12-30T11:48:19Z",
+              "deliverables_last_updated_at": null,
               "delivered_at": null
             }
         }
@@ -481,7 +481,7 @@ Field Name | Description | Data Type
 --------- | ----------- | -----------
 customer_hashed_email_address | The SHA 256 hash of the customer email address. Base16 encoded. All lower case | String
 deliverables_last_updated_at | The ISO8601 timestamp of the most recent generation of deliverables for the order. | DateTime
-delivered_at | The ISO8601 timestamp of the delivery date of the order. i.e date when the fieldwork completes and the study is closed. | DateTime
+delivered_at | The ISO8601 timestamp of the delivery date of the order. i.e the date when the fieldwork completes and the study is closed. | DateTime
 
 For the customer email address "name.surname@domain.com", the hash provided via API would be "b3204d933a7eb98d6f7ed8dbab916a885692a6d78f6f67deb185710c7cd05cee".
 

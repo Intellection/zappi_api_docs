@@ -27,6 +27,10 @@ Please note that as we are still finalizing our API, this spec is subject to cha
 
 # Change Log
 
+## 4 August 2022
+
+Added `delivered_at` to the order payload, as part of the metadata object.
+
 ## 9 May 2022
 
 Increased rate limit for numerous endpoints.
@@ -415,7 +419,7 @@ curl "https://api.zappi.io/v1/orders?limit=2&customer_email=name@domain.com" \
             "analyze_url": "https://subdomain.zappi.io/project_setup/zappi-product-test/1/analyze_project",
             "configure_url": "",
             "id": 1,
-            "status": "processing",
+            "status": "complete",
             "title": "An order title",
             "workspace_id": 1234,
             "visibility": "public",
@@ -423,7 +427,8 @@ curl "https://api.zappi.io/v1/orders?limit=2&customer_email=name@domain.com" \
             "country_code": "US",
             "metadata": {
               "customer_hashed_email_address": "abcdefghijklmnopq12345",
-              "deliverables_last_updated_at": "2021-12-30T11:46:15Z"
+              "deliverables_last_updated_at": "2021-12-30T11:46:15Z",
+              "delivered_at": "2021-12-29T00:00:00Z"
             }
         },
         {
@@ -438,7 +443,8 @@ curl "https://api.zappi.io/v1/orders?limit=2&customer_email=name@domain.com" \
             "country_code": "GB",
             "metadata": {
               "customer_hashed_email_address": "abcdefghijklmnopq12345",
-              "deliverables_last_updated_at": "2021-12-30T11:48:19Z"
+              "deliverables_last_updated_at": null,
+              "delivered_at": null
             }
         }
     ]
@@ -475,6 +481,7 @@ Field Name | Description | Data Type
 --------- | ----------- | -----------
 customer_hashed_email_address | The SHA 256 hash of the customer email address. Base16 encoded. All lower case | String
 deliverables_last_updated_at | The ISO8601 timestamp of the most recent generation of deliverables for the order. | DateTime
+delivered_at | The ISO8601 timestamp of the delivery date of the order. i.e the date when the fieldwork was completed and the study was closed. | DateTime
 
 For the customer email address "name.surname@domain.com", the hash provided via API would be "b3204d933a7eb98d6f7ed8dbab916a885692a6d78f6f67deb185710c7cd05cee".
 
@@ -504,7 +511,8 @@ curl "GET https://api.zappi.io/v1/orders/2?customer_email=name@domain.com" \
         "country_code": "US",
         "metadata": {
           "customer_hashed_email_address": "abcdefghijklmnopq12345",
-          "deliverables_last_updated_at": "2021-12-30T11:48:19Z"
+          "deliverables_last_updated_at": null,
+          "delivered_at": null
         }
     }
 }
@@ -624,7 +632,8 @@ curl "https://api.zappi.io/v1/orders" \
         "visibility": "public",
         "metadata": {
           "customer_hashed_email_address": "abcdefghijklmnopq12345",
-          "deliverables_last_updated_at": "2021-12-30T11:48:19Z"
+          "deliverables_last_updated_at": null,
+          "delivered_at": null
         }
     }
 }

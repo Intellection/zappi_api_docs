@@ -481,7 +481,7 @@ Field Name | Description | Data Type
 --------- | ----------- | -----------
 customer_hashed_email_address | The SHA 256 hash of the customer email address. Base16 encoded. All lower case | String
 deliverables_last_updated_at | The ISO8601 timestamp of the most recent generation of deliverables for the order. | DateTime
-delivered_at | The ISO8601 timestamp of the delivery date of the order. i.e the date when the fieldwork completes and the study is closed. | DateTime
+delivered_at | The ISO8601 timestamp of the delivery date of the order. i.e the date when the fieldwork was completed and the study was closed. | DateTime
 
 For the customer email address "name.surname@domain.com", the hash provided via API would be "b3204d933a7eb98d6f7ed8dbab916a885692a6d78f6f67deb185710c7cd05cee".
 

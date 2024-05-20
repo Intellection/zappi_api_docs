@@ -1,5 +1,6 @@
-ruby '>= 2.5'
 source 'https://rubygems.org'
+
+ruby '3.3.1'
 
 # Middleman
 gem 'middleman', '~> 4.4'

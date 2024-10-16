@@ -1,4 +1,4 @@
-FROM 659153740712.dkr.ecr.us-east-1.amazonaws.com/zappi/base/zappi-api-docs:1.0.0
+FROM 471112705198.dkr.ecr.us-east-1.amazonaws.com/zappi/base/ruby:3.3.5-3
 
 # ARGs & ENVs
 ARG APP_USER="app"

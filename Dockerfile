@@ -22,7 +22,7 @@ ADD . ${CODE_PATH}
 # Generate static files from raw docs
 RUN bundle exec middleman build
 
-FROM 471112705198.dkr.ecr.us-east-1.amazonaws.com/docker-hub/zappi/nginx:1.27.1
+FROM 471112705198.dkr.ecr.us-east-1.amazonaws.com/docker-hub/zappi/nginx:1.27.4
 
 # ARGs & ENVs
 ARG CODE_PATH="/srv/code"

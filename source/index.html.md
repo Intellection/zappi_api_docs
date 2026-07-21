@@ -27,6 +27,13 @@ Please note that as we are still finalizing our API, this spec is subject to cha
 
 # Change Log
 
+## 21 July 2026
+
+Added the `GET /teamspaces` endpoint.
+Removed the `GET /workspaces/{id}` endpoint.
+Removed `workspace_id` from the order and product endpoints.
+Removed `root_workspace_id` from the `GET /public_integrations/identity` payload.
+
 ## 4 August 2022
 
 Added `delivered_at` to the order payload, as part of the metadata object.
@@ -177,8 +184,7 @@ curl "http://api.zappi.io/v1/public_integrations" \
 {
     "client_id": "123456789",
     "installation_uuid": "123456-789-12345-6789-123456",
-    "subdomain_url": "https://subdomain.zappi.io",
-    "root_workspace_id": 999
+    "subdomain_url": "https://subdomain.zappi.io"
 }
 ```
 
@@ -190,7 +196,6 @@ Field | Description | Data Type
 --------- | ----------- | -----------
 client_id | The Client ID of the public integration | String
 installation_uuid | The installation UUID belonging to the customer group/public integration installation | String
-root_workspace_id | The ID of the root workspace for this customer group | Integer
 subdomain_url | The subdomain URL of the customer group | String
 
 ## Permissions
@@ -203,7 +208,7 @@ read_orders | View orders and order deliverables | View orders belonging to the 
 write_orders | Create orders | Create orders
 read_event_subscriptions | View event subscriptions | View event subscriptions
 write_event_subscriptions | Create/delete event subscriptions | Subscribe to events
-read_workspaces | View workspaces | View workspaces belonging to the Customer and Customer Group
+read_teamspaces | View teamspaces | View teamspaces belonging to the Customer and Customer Group
 
 # Rate Limits
 
@@ -221,7 +226,7 @@ Max Requests | Interval (seconds) | Endpoints
 60 | 60 | GET /products
 1 | 300 | POST /public_integrations/authorize
 60 | 60 | GET /public_integrations/identity
-60 | 60 | GET /workspaces/{id}
+60 | 60 | GET /teamspaces
 
 
 # Pagination
@@ -421,7 +426,6 @@ curl "https://api.zappi.io/v1/orders?limit=2&customer_email=name@domain.com" \
             "id": 1,
             "status": "complete",
             "title": "An order title",
-            "workspace_id": 1234,
             "visibility": "public",
             "product_id": 4,
             "country_code": "US",
@@ -437,7 +441,6 @@ curl "https://api.zappi.io/v1/orders?limit=2&customer_email=name@domain.com" \
             "id": 2,
             "status": "configuration",
             "title": "Another order title",
-            "workspace_id": 1234,
             "visibility": "public",
             "product_id": 3,
             "country_code": "GB",
@@ -471,7 +474,6 @@ country_code | Fieldwork country’s ISO 3166-1 alpha-2 code | String
 status | The status of the order: `configuration`, `processing`, `complete` | String
 configure_url | The URL that will go to the configuration page of the order on the Zappi platform | String
 analyze_url | The URL that will go to the analysis page of the order on the Zappi platform | String
-workspace_id | The workspace ID that the order is in | Integer
 visibility | The visibility of the order: `private`, `public` (available to everyone in the organisation | String
 metadata | Extra data pertaining to the order | Object
 
@@ -505,7 +507,6 @@ curl "GET https://api.zappi.io/v1/orders/2?customer_email=name@domain.com" \
         "id": 2,
         "status": "configuration",
         "title": "Another order title",
-        "workspace_id": 1234,
         "visibility": "public",
         "product_id": 4,
         "country_code": "US",
@@ -539,7 +540,6 @@ product_id | Product ID | Integer
 status | The status of the order: `configuration`, `processing`, `complete` | String
 title | Order title | String
 visibility | The visibility of the order: `private`, `public` (available to everyone in the organisation | String
-workspace_id | The workspace ID that the order is in | Integer
 metadata | Extra data pertaining to the order | Object
 
 ### GET /orders/{id}/deliverables
@@ -575,9 +575,9 @@ curl "https://api.zappi.io/v1/orders/3/deliverables" \
             "visibility": "public"
         },
         "survey_metadata": {
-           "xlsx":
-"https://s3.amazonaws.com/zappi.api-exports/production/3/survey_metadata_3.xlxs?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=A123456%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20201202T103901Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=123456",
+            "xlsx": "https://s3.amazonaws.com/zappi.api-exports/production/3/survey_metadata_3.xlxs?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=A123456%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20201202T103901Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=123456",
             "visibility": "public"
+        }
     }
 }
 ```
@@ -613,7 +613,7 @@ curl "https://api.zappi.io/v1/orders" \
   -X POST \
   -H "Authorization: Bearer abcdefghijk" \
   -H "X-Zappi-Installation": "123456-789-12345-6789-123456" \
-  -d '{"order":{"product_id":1,"title":"An Order Title", "customer_email":"user@domain.com","workspace_id":1234}'
+  -d '{"order":{"product_id":1,"title":"An Order Title", "customer_email":"user@domain.com"}'
 }
 
 ```
@@ -628,7 +628,6 @@ curl "https://api.zappi.io/v1/orders" \
         "id": 4,
         "status": "configuration",
         "title": "An Order Title",
-        "workspace_id": 1,
         "visibility": "public",
         "metadata": {
           "customer_hashed_email_address": "abcdefghijklmnopq12345",
@@ -648,7 +647,6 @@ Field Name | Description | Data Type | Required
 customer_email | Email address of the customer creating the order | String | Yes
 product_id | Product ID | Integer | Yes
 title | The title of the order | String | Yes
-workspace_id | The workspace to create the order under (defaults to the root workspace) | Integer | No
 
 #### Response Body
 
@@ -662,7 +660,6 @@ title | Order title | String
 product_id | Product ID | Integer
 country_code | Fieldwork country’s ISO 3166-1 alpha-2 code | String
 visibility | The visibility of the order: `private`, `public` (available to everyone in the organisation | String
-workspace_id | The workspace ID that the order is in | Integer
 metadata | Extra data pertaining to the order | Object
 
 ## Products
@@ -672,7 +669,7 @@ metadata | Extra data pertaining to the order | Object
 > Example Request:
 
 ```shell
-curl "http://api.zappi.io/v1/products?workspace_id=1234" \
+curl "http://api.zappi.io/v1/products" \
   -H "Authorization: Bearer abcdefghijk" \
   -H "X-Zappi-Installation": "123456-789-12345-6789-123456"
 ```
@@ -697,12 +694,6 @@ curl "http://api.zappi.io/v1/products?workspace_id=1234" \
 }
 ```
 
-#### Query String
-
-Field Name | Description | Data Type | Required
---------- | ----------- | ----------- | -----------
-workspace_id | The workspace ID to fetch available products for. Defaults to the customer's root workspace. | Integer | No
-
   Returns the list of products available for the customer group
 
 #### Response Body
@@ -713,14 +704,14 @@ id | Product ID | Integer
 name | Product Name | String
 description | Product description | String
 
-## Workspaces
+## Teamspaces
 
-### GET /workspaces/{id}
+### GET /teamspaces
 
 > Example Request:
 
 ```shell
-curl "http://api.zappi.io/v1/workspaces/12345" \
+curl "https://api.zappi.io/v1/teamspaces?customer_email=name@domain.com" \
   -H "Authorization: Bearer abcdefghijk" \
   -H "X-Zappi-Installation": "123456-789-12345-6789-123456"
 ```
@@ -729,76 +720,39 @@ curl "http://api.zappi.io/v1/workspaces/12345" \
 
 ```json
 {
-    "workspace": {
-        "children": [
-            {
-                "children": [],
-                "id": 1,
-                "label": "worspace 1"
-            },
-            {
-                "children": [],
-                "id": 2,
-                "label": "workspace 2"
-            },
-            {
-                "children": [],
-                "id": 3,
-                "label": "workspace 3"
-            },
-            {
-                "children": [
-                    {
-                        "children": [],
-                        "id": 4,
-                        "label": "workjspace 4"
-                    },
-                    {
-                        "children": [],
-                        "id": 5,
-                        "label": "workspace 5"
-                    },
-                    {
-                        "children": [],
-                        "id": 6,
-                        "label": "workspace 6"
-                    },
-                    {
-                        "children": [],
-                        "id": 7,
-                        "label": "workspace 7"
-                    },
-                    {
-                        "children": [],
-                        "id": 8,
-                        "label": "workspace 8"
-                    }
-                ],
-                "id": 9,
-                "label": "workspace 9"
-            }
-        ],
-        "id": 12345,
-        "label": "root workspace"
-    }
+    "next_cursor": null,
+    "teamspaces": [
+        {
+            "uuid": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+            "name": "Marketing",
+            "private": false
+        },
+        {
+            "uuid": "9c5b94b1-35ad-49bb-b118-8e8fc24abf80",
+            "name": "Innovation",
+            "private": true
+        }
+    ]
 }
 ```
 
-  Workspace details.
+  Returns the list of teamspaces the customer belongs to within the customer group
 
 #### Query String
 
 Field Name | Description | Data Type | Required
 --------- | ----------- | ----------- | -----------
 customer_email | The email address of the customer the request is being made on behalf of. | String | Yes
+cursor | Identifies where the next set of results should begin. See [Pagination](#pagination). | String | No
+limit | The number of results in the response. See [Pagination](#pagination). | Integer | No
 
 #### Response Body
 
 Field Name | Description | Data Type
 --------- | ----------- | -----------
-id | Workspace ID | Integer
-children | The child workspaces for this workspace | String
-label | Workspace title | String
+uuid | The teamspace's unique identifier | String
+name | The name of the teamspace | String
+private | Whether the teamspace is private (`true`) or shared with the whole organisation (`false`) | Boolean
 
 # Event Types
 

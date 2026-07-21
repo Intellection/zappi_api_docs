@@ -31,6 +31,8 @@ Please note that as we are still finalizing our API, this spec is subject to cha
 
 Added the `GET /teamspaces` endpoint.
 Removed the `GET /workspaces/{id}` endpoint.
+Removed `workspace_id` from the order and product endpoints.
+Removed `root_workspace_id` from the `GET /public_integrations/identity` payload.
 
 ## 4 August 2022
 
@@ -182,8 +184,7 @@ curl "http://api.zappi.io/v1/public_integrations" \
 {
     "client_id": "123456789",
     "installation_uuid": "123456-789-12345-6789-123456",
-    "subdomain_url": "https://subdomain.zappi.io",
-    "root_workspace_id": 999
+    "subdomain_url": "https://subdomain.zappi.io"
 }
 ```
 
@@ -195,7 +196,6 @@ Field | Description | Data Type
 --------- | ----------- | -----------
 client_id | The Client ID of the public integration | String
 installation_uuid | The installation UUID belonging to the customer group/public integration installation | String
-root_workspace_id | The ID of the root workspace for this customer group | Integer
 subdomain_url | The subdomain URL of the customer group | String
 
 ## Permissions
@@ -426,7 +426,6 @@ curl "https://api.zappi.io/v1/orders?limit=2&customer_email=name@domain.com" \
             "id": 1,
             "status": "complete",
             "title": "An order title",
-            "workspace_id": 1234,
             "visibility": "public",
             "product_id": 4,
             "country_code": "US",
@@ -442,7 +441,6 @@ curl "https://api.zappi.io/v1/orders?limit=2&customer_email=name@domain.com" \
             "id": 2,
             "status": "configuration",
             "title": "Another order title",
-            "workspace_id": 1234,
             "visibility": "public",
             "product_id": 3,
             "country_code": "GB",
@@ -475,9 +473,7 @@ product_id | Product ID | Integer
 country_code | Fieldwork country’s ISO 3166-1 alpha-2 code | String
 status | The status of the order: `configuration`, `processing`, `complete` | String
 configure_url | The URL that will go to the configuration page of the order on the Zappi platform | String
-analyze_url | The URL that will go to the analysis page of the order on the Zappi platform | String
-workspace_id | The workspace ID that the order is in | Integer
-visibility | The visibility of the order: `private`, `public` (available to everyone in the organisation | String
+analyze_url | The URL that will go to the analysis page of the order on the Zappi platform | Stringvisibility | The visibility of the order: `private`, `public` (available to everyone in the organisation | String
 metadata | Extra data pertaining to the order | Object
 
 #### Order Metadata
@@ -510,7 +506,6 @@ curl "GET https://api.zappi.io/v1/orders/2?customer_email=name@domain.com" \
         "id": 2,
         "status": "configuration",
         "title": "Another order title",
-        "workspace_id": 1234,
         "visibility": "public",
         "product_id": 4,
         "country_code": "US",
@@ -543,9 +538,7 @@ configure_url | The URL that will go to the configuration page of the order on t
 product_id | Product ID | Integer
 status | The status of the order: `configuration`, `processing`, `complete` | String
 title | Order title | String
-visibility | The visibility of the order: `private`, `public` (available to everyone in the organisation | String
-workspace_id | The workspace ID that the order is in | Integer
-metadata | Extra data pertaining to the order | Object
+visibility | The visibility of the order: `private`, `public` (available to everyone in the organisation | Stringmetadata | Extra data pertaining to the order | Object
 
 ### GET /orders/{id}/deliverables
 
@@ -618,7 +611,7 @@ curl "https://api.zappi.io/v1/orders" \
   -X POST \
   -H "Authorization: Bearer abcdefghijk" \
   -H "X-Zappi-Installation": "123456-789-12345-6789-123456" \
-  -d '{"order":{"product_id":1,"title":"An Order Title", "customer_email":"user@domain.com","workspace_id":1234}'
+  -d '{"order":{"product_id":1,"title":"An Order Title", "customer_email":"user@domain.com"}'
 }
 
 ```
@@ -633,7 +626,6 @@ curl "https://api.zappi.io/v1/orders" \
         "id": 4,
         "status": "configuration",
         "title": "An Order Title",
-        "workspace_id": 1,
         "visibility": "public",
         "metadata": {
           "customer_hashed_email_address": "abcdefghijklmnopq12345",
@@ -653,7 +645,6 @@ Field Name | Description | Data Type | Required
 customer_email | Email address of the customer creating the order | String | Yes
 product_id | Product ID | Integer | Yes
 title | The title of the order | String | Yes
-workspace_id | The workspace to create the order under (defaults to the root workspace) | Integer | No
 
 #### Response Body
 
@@ -666,9 +657,7 @@ status | The status of the order: `configuration`, `processing`, `complete` | St
 title | Order title | String
 product_id | Product ID | Integer
 country_code | Fieldwork country’s ISO 3166-1 alpha-2 code | String
-visibility | The visibility of the order: `private`, `public` (available to everyone in the organisation | String
-workspace_id | The workspace ID that the order is in | Integer
-metadata | Extra data pertaining to the order | Object
+visibility | The visibility of the order: `private`, `public` (available to everyone in the organisation | Stringmetadata | Extra data pertaining to the order | Object
 
 ## Products
 
@@ -677,7 +666,7 @@ metadata | Extra data pertaining to the order | Object
 > Example Request:
 
 ```shell
-curl "http://api.zappi.io/v1/products?workspace_id=1234" \
+curl "http://api.zappi.io/v1/products" \
   -H "Authorization: Bearer abcdefghijk" \
   -H "X-Zappi-Installation": "123456-789-12345-6789-123456"
 ```
@@ -701,12 +690,6 @@ curl "http://api.zappi.io/v1/products?workspace_id=1234" \
     ]
 }
 ```
-
-#### Query String
-
-Field Name | Description | Data Type | Required
---------- | ----------- | ----------- | -----------
-workspace_id | The workspace ID to fetch available products for. Defaults to the customer's root workspace. | Integer | No
 
   Returns the list of products available for the customer group
 

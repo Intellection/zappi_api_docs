@@ -473,7 +473,8 @@ product_id | Product ID | Integer
 country_code | Fieldwork country’s ISO 3166-1 alpha-2 code | String
 status | The status of the order: `configuration`, `processing`, `complete` | String
 configure_url | The URL that will go to the configuration page of the order on the Zappi platform | String
-analyze_url | The URL that will go to the analysis page of the order on the Zappi platform | Stringvisibility | The visibility of the order: `private`, `public` (available to everyone in the organisation | String
+analyze_url | The URL that will go to the analysis page of the order on the Zappi platform | String
+visibility | The visibility of the order: `private`, `public` (available to everyone in the organisation | String
 metadata | Extra data pertaining to the order | Object
 
 #### Order Metadata
@@ -538,7 +539,8 @@ configure_url | The URL that will go to the configuration page of the order on t
 product_id | Product ID | Integer
 status | The status of the order: `configuration`, `processing`, `complete` | String
 title | Order title | String
-visibility | The visibility of the order: `private`, `public` (available to everyone in the organisation | Stringmetadata | Extra data pertaining to the order | Object
+visibility | The visibility of the order: `private`, `public` (available to everyone in the organisation | String
+metadata | Extra data pertaining to the order | Object
 
 ### GET /orders/{id}/deliverables
 
@@ -657,7 +659,8 @@ status | The status of the order: `configuration`, `processing`, `complete` | St
 title | Order title | String
 product_id | Product ID | Integer
 country_code | Fieldwork country’s ISO 3166-1 alpha-2 code | String
-visibility | The visibility of the order: `private`, `public` (available to everyone in the organisation | Stringmetadata | Extra data pertaining to the order | Object
+visibility | The visibility of the order: `private`, `public` (available to everyone in the organisation | String
+metadata | Extra data pertaining to the order | Object
 
 ## Products
 

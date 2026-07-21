@@ -30,6 +30,7 @@ Please note that as we are still finalizing our API, this spec is subject to cha
 ## 21 July 2026
 
 Added the `GET /teamspaces` endpoint.
+Removed the `GET /workspaces/{id}` endpoint.
 
 ## 4 August 2022
 
@@ -207,7 +208,6 @@ read_orders | View orders and order deliverables | View orders belonging to the 
 write_orders | Create orders | Create orders
 read_event_subscriptions | View event subscriptions | View event subscriptions
 write_event_subscriptions | Create/delete event subscriptions | Subscribe to events
-read_workspaces | View workspaces | View workspaces belonging to the Customer and Customer Group
 read_teamspaces | View teamspaces | View teamspaces belonging to the Customer and Customer Group
 
 # Rate Limits
@@ -226,7 +226,6 @@ Max Requests | Interval (seconds) | Endpoints
 60 | 60 | GET /products
 1 | 300 | POST /public_integrations/authorize
 60 | 60 | GET /public_integrations/identity
-60 | 60 | GET /workspaces/{id}
 60 | 60 | GET /teamspaces
 
 
@@ -768,93 +767,6 @@ Field Name | Description | Data Type
 uuid | The teamspace's unique identifier | String
 name | The name of the teamspace | String
 private | Whether the teamspace is private (`true`) or shared with the whole organisation (`false`) | Boolean
-
-## Workspaces
-
-### GET /workspaces/{id}
-
-> Example Request:
-
-```shell
-curl "http://api.zappi.io/v1/workspaces/12345" \
-  -H "Authorization: Bearer abcdefghijk" \
-  -H "X-Zappi-Installation": "123456-789-12345-6789-123456"
-```
-
-> Example Response:
-
-```json
-{
-    "workspace": {
-        "children": [
-            {
-                "children": [],
-                "id": 1,
-                "label": "worspace 1"
-            },
-            {
-                "children": [],
-                "id": 2,
-                "label": "workspace 2"
-            },
-            {
-                "children": [],
-                "id": 3,
-                "label": "workspace 3"
-            },
-            {
-                "children": [
-                    {
-                        "children": [],
-                        "id": 4,
-                        "label": "workjspace 4"
-                    },
-                    {
-                        "children": [],
-                        "id": 5,
-                        "label": "workspace 5"
-                    },
-                    {
-                        "children": [],
-                        "id": 6,
-                        "label": "workspace 6"
-                    },
-                    {
-                        "children": [],
-                        "id": 7,
-                        "label": "workspace 7"
-                    },
-                    {
-                        "children": [],
-                        "id": 8,
-                        "label": "workspace 8"
-                    }
-                ],
-                "id": 9,
-                "label": "workspace 9"
-            }
-        ],
-        "id": 12345,
-        "label": "root workspace"
-    }
-}
-```
-
-  Workspace details.
-
-#### Query String
-
-Field Name | Description | Data Type | Required
---------- | ----------- | ----------- | -----------
-customer_email | The email address of the customer the request is being made on behalf of. | String | Yes
-
-#### Response Body
-
-Field Name | Description | Data Type
---------- | ----------- | -----------
-id | Workspace ID | Integer
-children | The child workspaces for this workspace | String
-label | Workspace title | String
 
 # Event Types
 

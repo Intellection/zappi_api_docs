@@ -27,6 +27,10 @@ Please note that as we are still finalizing our API, this spec is subject to cha
 
 # Change Log
 
+## 21 July 2026
+
+Added the `GET /teamspaces` endpoint.
+
 ## 4 August 2022
 
 Added `delivered_at` to the order payload, as part of the metadata object.
@@ -204,6 +208,7 @@ write_orders | Create orders | Create orders
 read_event_subscriptions | View event subscriptions | View event subscriptions
 write_event_subscriptions | Create/delete event subscriptions | Subscribe to events
 read_workspaces | View workspaces | View workspaces belonging to the Customer and Customer Group
+read_teamspaces | View teamspaces | View teamspaces belonging to the Customer and Customer Group
 
 # Rate Limits
 
@@ -222,6 +227,7 @@ Max Requests | Interval (seconds) | Endpoints
 1 | 300 | POST /public_integrations/authorize
 60 | 60 | GET /public_integrations/identity
 60 | 60 | GET /workspaces/{id}
+60 | 60 | GET /teamspaces
 
 
 # Pagination
@@ -712,6 +718,56 @@ Field Name | Description | Data Type
 id | Product ID | Integer
 name | Product Name | String
 description | Product description | String
+
+## Teamspaces
+
+### GET /teamspaces
+
+> Example Request:
+
+```shell
+curl "https://api.zappi.io/v1/teamspaces?customer_email=name@domain.com" \
+  -H "Authorization: Bearer abcdefghijk" \
+  -H "X-Zappi-Installation": "123456-789-12345-6789-123456"
+```
+
+> Example Response:
+
+```json
+{
+    "next_cursor": null,
+    "teamspaces": [
+        {
+            "uuid": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+            "name": "Marketing",
+            "private": false
+        },
+        {
+            "uuid": "9c5b94b1-35ad-49bb-b118-8e8fc24abf80",
+            "name": "Innovation",
+            "private": true
+        }
+    ]
+}
+```
+
+  Returns the list of teamspaces the customer belongs to within the customer group
+
+#### Query String
+
+Field Name | Description | Data Type | Required
+--------- | ----------- | ----------- | -----------
+customer_email | The email address of the customer the request is being made on behalf of. | String | Yes
+cursor | Identifies where the next set of results should begin. See [Pagination](#pagination). | String | No
+limit | The number of results in the response. See [Pagination](#pagination). | Integer | No
+
+#### Response Body
+
+Field Name | Description | Data Type
+--------- | ----------- | -----------
+uuid | The teamspace's unique identifier | String
+name | The name of the teamspace | String
+private | Whether the teamspace is private (`true`) or shared with the whole organisation (`false`) | Boolean
 
 ## Workspaces
 

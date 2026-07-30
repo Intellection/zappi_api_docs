@@ -30,6 +30,7 @@ Please note that as we are still finalizing our API, this spec is subject to cha
 ## 30 July 2026
 
 Added `teamspace_uuid` to the order payload.
+Added `teamspace_uuid` as an optional query parameter on the `GET /orders` endpoint.
 
 ## 21 July 2026
 
@@ -467,6 +468,7 @@ curl "https://api.zappi.io/v1/orders?limit=2&customer_email=name@domain.com" \
 Field Name | Description | Data Type | Required
 --------- | ----------- | ----------- | -----------
 customer_email | The email address of the customer the request is being made on behalf of. | String | Yes
+teamspace_uuid | Return only the orders in this teamspace. Responds `404` if the teamspace does not exist or the customer is not a member of it. | String | No
 
 
 #### Response Body

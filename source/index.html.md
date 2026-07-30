@@ -27,6 +27,11 @@ Please note that as we are still finalizing our API, this spec is subject to cha
 
 # Change Log
 
+## 30 July 2026
+
+Added `teamspace_uuid` to the order payload.
+Added `teamspace_uuid` as an optional query parameter on the `GET /orders` endpoint.
+
 ## 21 July 2026
 
 Added the `GET /teamspaces` endpoint.
@@ -429,6 +434,7 @@ curl "https://api.zappi.io/v1/orders?limit=2&customer_email=name@domain.com" \
             "visibility": "public",
             "product_id": 4,
             "country_code": "US",
+            "teamspace_uuid": "3f2a9c1e-7b84-4d16-9c33-0a1e5d6f8b20",
             "metadata": {
               "customer_hashed_email_address": "abcdefghijklmnopq12345",
               "deliverables_last_updated_at": "2021-12-30T11:46:15Z",
@@ -444,6 +450,7 @@ curl "https://api.zappi.io/v1/orders?limit=2&customer_email=name@domain.com" \
             "visibility": "public",
             "product_id": 3,
             "country_code": "GB",
+            "teamspace_uuid": null,
             "metadata": {
               "customer_hashed_email_address": "abcdefghijklmnopq12345",
               "deliverables_last_updated_at": null,
@@ -461,6 +468,7 @@ curl "https://api.zappi.io/v1/orders?limit=2&customer_email=name@domain.com" \
 Field Name | Description | Data Type | Required
 --------- | ----------- | ----------- | -----------
 customer_email | The email address of the customer the request is being made on behalf of. | String | Yes
+teamspace_uuid | Return only the orders in this teamspace. Responds `404` if the teamspace does not exist or the customer is not a member of it. | String | No
 
 
 #### Response Body
@@ -471,6 +479,7 @@ id | Order Id | Integer
 title | Order title | String
 product_id | Product ID | Integer
 country_code | Fieldwork country’s ISO 3166-1 alpha-2 code | String
+teamspace_uuid | Unique identifier of the teamspace the order belongs to, or `null` if it belongs to none | String
 status | The status of the order: `configuration`, `processing`, `complete` | String
 configure_url | The URL that will go to the configuration page of the order on the Zappi platform | String
 analyze_url | The URL that will go to the analysis page of the order on the Zappi platform | String
@@ -510,6 +519,7 @@ curl "GET https://api.zappi.io/v1/orders/2?customer_email=name@domain.com" \
         "visibility": "public",
         "product_id": 4,
         "country_code": "US",
+        "teamspace_uuid": "3f2a9c1e-7b84-4d16-9c33-0a1e5d6f8b20",
         "metadata": {
           "customer_hashed_email_address": "abcdefghijklmnopq12345",
           "deliverables_last_updated_at": null,
@@ -538,6 +548,7 @@ country_code | Fieldwork country’s ISO 3166-1 alpha-2 code | String
 configure_url | The URL that will go to the configuration page of the order on the Zappi platform | String
 product_id | Product ID | Integer
 status | The status of the order: `configuration`, `processing`, `complete` | String
+teamspace_uuid | Unique identifier of the teamspace the order belongs to, or `null` if it belongs to none | String
 title | Order title | String
 visibility | The visibility of the order: `private`, `public` (available to everyone in the organisation | String
 metadata | Extra data pertaining to the order | Object
@@ -629,6 +640,7 @@ curl "https://api.zappi.io/v1/orders" \
         "status": "configuration",
         "title": "An Order Title",
         "visibility": "public",
+        "teamspace_uuid": "3f2a9c1e-7b84-4d16-9c33-0a1e5d6f8b20",
         "metadata": {
           "customer_hashed_email_address": "abcdefghijklmnopq12345",
           "deliverables_last_updated_at": null,
@@ -659,6 +671,7 @@ status | The status of the order: `configuration`, `processing`, `complete` | St
 title | Order title | String
 product_id | Product ID | Integer
 country_code | Fieldwork country’s ISO 3166-1 alpha-2 code | String
+teamspace_uuid | Unique identifier of the teamspace the order belongs to, or `null` if it belongs to none | String
 visibility | The visibility of the order: `private`, `public` (available to everyone in the organisation | String
 metadata | Extra data pertaining to the order | Object
 

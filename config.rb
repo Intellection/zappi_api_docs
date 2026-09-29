@@ -23,8 +23,9 @@ set :fonts_dir, 'fonts'
 # Activate the syntax highlighter
 activate :syntax
 ready do
-  require './lib/monokai_sublime_slate.rb'
+  require './lib/zappi_dark.rb'
   require './lib/multilang.rb'
+  require './lib/endpoint_bar.rb'
 end
 
 activate :sprockets
@@ -60,4 +61,5 @@ set :port, 4567
 
 helpers do
   require './lib/toc_data.rb'
+  require './lib/page_decorations.rb'
 end

@@ -2,7 +2,7 @@
 title: API Reference
 
 language_tabs: # must be one of https://git.io/vQNgJ
-  - shell
+  - shell: cURL
 
 toc_footers:
   - Contact <a href="mailto:support@zappistore.com"> support@zappistore.com</a> for API Credentials
@@ -11,6 +11,23 @@ includes:
   - errors
 
 search: true
+
+eyebrows: # the label shown above each top-level heading
+  Overview:
+    - Zappi API
+    - Beta
+    - Change Log
+    - API Overview
+  Getting started:
+    - Authentication
+    - Rate Limits
+    - Pagination
+    - Visibility
+  Reference:
+    - API Endpoints
+    - Event Types
+    - Webhook Security
+    - Error Codes
 
 code_clipboard: true
 ---
@@ -128,11 +145,11 @@ Once a Public Integration is installed on a subdomain, the Public Integration wi
 > Example Request:
 
 ```shell
-curl "http://api.zappi.io/v1/public_integrations/authorize" \
-  -H "Authorization: Basic 12345 " \
+curl -X POST "http://api.zappi.io/v1/public_integrations/authorize" \
+  -H "Authorization: Basic 12345"
 ```
 
-> Example Response:
+> Example Response: 200 OK
 
 ```json
 {
@@ -142,7 +159,11 @@ curl "http://api.zappi.io/v1/public_integrations/authorize" \
 }
 ```
 
-In order to obtain an access token, a request will need to be made to: _POST /public_integrations/authorize_
+In order to obtain an access token, a request will need to be made to:
+
+```endpoint
+POST /public_integrations/authorize
+```
 
 
 #### Headers
@@ -159,7 +180,7 @@ access_token | The access token | The Access Token
 expires_in | When the access token expires | DateTime
 token_type | This will be `bearer`| String
 
-### Access Token
+## Access Token
 
 All requests made by a public integration must have the access token and the installation UUID in the headers, as follows:
 
@@ -168,7 +189,7 @@ _Authorization: Bearer `<access_token>>`_
 _X-Zappi-Installation: `<installation_uuid>`_
 
 
-### Token Expiration
+## Token Expiration
 
 Public Integration access tokens expire after 24 hours.
 
@@ -178,9 +199,9 @@ Public Integration access tokens expire after 24 hours.
 > Example Request:
 
 ```shell
-curl "http://api.zappi.io/v1/public_integrations" \
+curl "http://api.zappi.io/v1/public_integrations/identity" \
   -H "Authorization: Bearer abcdefghijk" \
-  -H "X-Zappi-Installation": "123456-789-12345-6789-123456"
+  -H "X-Zappi-Installation: 123456-789-12345-6789-123456"
 ```
 
 > Example Response:
@@ -193,7 +214,11 @@ curl "http://api.zappi.io/v1/public_integrations" \
 }
 ```
 
-In order to view information pertaining to a public integration installation, a request will need to be made to: _GET /public_integrations/identity_
+In order to view information pertaining to a public integration installation, a request will need to be made to:
+
+```endpoint
+GET /public_integrations/identity
+```
 
 #### Response Body
 

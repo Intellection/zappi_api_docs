@@ -21,48 +21,80 @@ under the License.
 // Use these settings to help adjust the appearance of Slate
 
 
+// ZAPPI DESIGN SYSTEM TOKENS
+////////////////////
+// Values from the Zappi DS (zappi-ui tailwind preset)
+$guava-100: #FFE2E8;
+$guava-300: #FF9FB4;
+$guava-500: #FF4D7C;
+$guava-900: #8F0C40;
+$blueberry-100: #D3EFFF;
+$blueberry-300: #81C7FF;
+$blueberry-800: #003DDB;
+$blueberry-900: #0B39A4;
+$fern-100: #E2F6E2;
+$fern-200: #C7EBC7;
+$fern-300: #9BDA9B;
+$fern-900: #204722;
+$mango-100: #FFF9C5;
+$mango-300: #FFE746;
+$mango-900: #7C3E0B;
+$valencia-100: #FBE6E5;
+$valencia-500: #DB4A46;
+$valencia-900: #752927;
+$mine-shaft-500: #818181;
+$mine-shaft-900: #313131;
+$mine-shaft-950: #1A1A1A;
+
+$fg-primary: rgba(0, 0, 0, 0.8);
+$fg-secondary: rgba(0, 0, 0, 0.6);
+$fg-tertiary: rgba(0, 0, 0, 0.4);
+$fg-primary-inverse: #fff;
+$fg-secondary-inverse: rgba(255, 255, 255, 0.8);
+$fg-tertiary-inverse: rgba(255, 255, 255, 0.6);
+
+$bg-white: #fff;
+$bg-light: #F5F5F5;
+$border-light: #D1D1D1;
+$border-dark: #B2B2B2;
+$border-separator: #E4E4E4;
+$border-separator-inverse: rgba(255, 255, 255, 0.08);
+$hover-on-light: rgba(0, 0, 0, 0.05);
+$hover-on-dark: rgba(255, 255, 255, 0.08);
+
+$link: $blueberry-800;
+$link-hover: $blueberry-900;
+
+
 // BACKGROUND COLORS
 ////////////////////
-$nav-bg: #2E3336 !default;
-$examples-bg: #2E3336 !default;
-$code-bg: #1E2224 !default;
-$code-annotation-bg: #191D1F !default;
-$nav-subitem-bg: #1E2224 !default;
-$nav-active-bg: #ff4d7c !default;
-$nav-active-parent-bg: #1E2224 !default; // parent links of the current section
-$lang-select-border: #000 !default;
-$lang-select-bg: #1E2224 !default;
-$lang-select-active-bg: $examples-bg !default; // feel free to change this to blue or something
-$lang-select-pressed-bg: #111 !default; // color of language tab bg when mouse is pressed
-$main-bg: #F3F7F9 !default;
-$aside-notice-bg: #8fbcd4 !default;
-$aside-warning-bg: #c97a7e !default;
-$aside-success-bg: #6ac174 !default;
-$search-notice-bg: #c97a7e !default;
+$nav-bg: $bg-white !default;
+$examples-bg: $mine-shaft-900 !default;
+$code-bg: $mine-shaft-950 !default;
+$nav-active-bg: $guava-100 !default;
+$main-bg: $bg-white !default;
+$aside-notice-bg: $blueberry-100 !default;
+$aside-warning-bg: $valencia-100 !default;
+$aside-success-bg: $fern-100 !default;
 
 
 // TEXT COLORS
 ////////////////////
-$main-text: #333 !default; // main content text color
-$nav-text: #fff !default;
-$nav-active-text: #fff !default;
-$nav-active-parent-text: #fff !default; // parent links of the current section
-$lang-select-text: #fff !default; // color of unselected language tab text
-$lang-select-active-text: #fff !default; // color of selected language tab text
-$lang-select-pressed-text: #fff !default; // color of language tab text when mouse is pressed
+$main-text: $fg-primary !default; // main content text color
+$nav-text: $fg-primary !default;
+$nav-active-text: $guava-900 !default;
 
 
 // SIZES
 ////////////////////
-$nav-width: 230px !default; // width of the navbar
-$examples-width: 40% !default; // portion of the screen taken up by code examples
-$logo-margin: 0px !default; // margin below logo
-$main-padding: 28px !default; // padding to left and right of content & examples
-$nav-padding: 15px !default; // padding to left and right of navbar
-$nav-v-padding: 10px !default; // padding used vertically around search boxes and results
-$nav-indent: 10px !default; // extra padding for ToC subitems
-$code-annotation-padding: 13px !default; // padding inside code annotations
-$h1-margin-bottom: 21px !default; // padding under the largest header tags
+$nav-width: 248px !default; // width of the navbar
+$examples-ratio: 0.45 !default; // portion of the content area taken up by code examples
+$examples-width: percentage($examples-ratio) !default;
+$main-padding: 40px !default; // padding to left and right of content
+$examples-padding: 24px !default; // padding to left and right of code examples
+$nav-padding: 12px !default; // padding to left and right of navbar
+$nav-indent: 12px !default; // extra padding for ToC subitems
+$h1-margin-bottom: 32px !default; // padding under the largest header tags
 $tablet-width: 930px !default; // min width before reverting to tablet size
 $phone-width: $tablet-width - $nav-width !default; // min width before reverting to mobile size
 
@@ -70,26 +102,29 @@ $phone-width: $tablet-width - $nav-width !default; // min width before reverting
 // FONTS
 ////////////////////
 %default-font {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  font-family: 'Noto Sans', system-ui, -apple-system, "Segoe UI", sans-serif;
   font-size: 14px;
 }
 
 %header-font {
   @extend %default-font;
-  font-weight: bold;
+  font-weight: 700;
 }
 
 %code-font {
-  font-family: Consolas, Menlo, Monaco, "Lucida Console", "Liberation Mono", "DejaVu Sans Mono", "Bitstream Vera Sans Mono", "Courier New", monospace, serif;
-  font-size: 12px;
-  line-height: 1.5;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+  font-size: 12.5px;
+  line-height: 21px;
 }
 
-
-// OTHER
-////////////////////
-$nav-footer-border-color: #666 !default;
-$search-box-border-color: #666 !default;
+// Small uppercase label, used for eyebrows and code sample labels
+%overline {
+  font-size: 10px;
+  line-height: 14px;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
 
 
 ////////////////////////////////////////////////////////////////////////////////

@@ -145,8 +145,8 @@ Once a Public Integration is installed on a subdomain, the Public Integration wi
 > Example Request:
 
 ```shell
-curl "http://api.zappi.io/v1/public_integrations/authorize" \
-  -H "Authorization: Basic 12345 " \
+curl -X POST "http://api.zappi.io/v1/public_integrations/authorize" \
+  -H "Authorization: Basic 12345"
 ```
 
 > Example Response: 200 OK
@@ -199,9 +199,9 @@ Public Integration access tokens expire after 24 hours.
 > Example Request:
 
 ```shell
-curl "http://api.zappi.io/v1/public_integrations" \
+curl "http://api.zappi.io/v1/public_integrations/identity" \
   -H "Authorization: Bearer abcdefghijk" \
-  -H "X-Zappi-Installation": "123456-789-12345-6789-123456"
+  -H "X-Zappi-Installation: 123456-789-12345-6789-123456"
 ```
 
 > Example Response:

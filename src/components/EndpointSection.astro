@@ -1,0 +1,101 @@
+---
+import Callout from "./Callout.astro";
+import CodePanel from "./CodePanel.astro";
+import FieldList from "./FieldList.astro";
+import MethodBadge from "./MethodBadge.astro";
+import SectionActions from "./SectionActions.astro";
+import { highlight } from "../lib/highlight";
+import { endpointMarkdown, inline } from "../lib/markdown";
+import { snippets } from "../lib/snippets";
+import type { Endpoint } from "../data/types";
+
+interface Props {
+  endpoint: Endpoint;
+}
+
+const { endpoint } = Astro.props;
+const samples = snippets(endpoint.request);
+const requestBlocks = await Promise.all(
+  samples.map(async ({ language, code }) => ({ id: language.id, html: await highlight(code, language.shiki) })),
+);
+const responseBlocks =
+  endpoint.response.body === null
+    ? [{ id: "empty", html: '<pre class="empty-response"><code>No content</code></pre>' }]
+    : [{ id: "json", html: await highlight(JSON.stringify(endpoint.response.body, null, 2), "json") }];
+const markdown = endpointMarkdown(endpoint, samples[0].code);
+---
+
+<section class="doc-section" data-spy={endpoint.id}>
+  <div class="section-grid">
+    <div class="section-prose">
+      <header class="section-header">
+        <h2 id={endpoint.id}>{endpoint.title}</h2>
+        <SectionActions id={endpoint.id} markdown={markdown} />
+      </header>
+      <div class="endpoint-line">
+        <MethodBadge method={endpoint.method} />
+        <code>/v1{endpoint.path}</code>
+      </div>
+      <div class="prose" set:html={inline(endpoint.description)} />
+      {
+        (endpoint.scope || endpoint.rateLimit) && (
+          <dl class="endpoint-meta">
+            {endpoint.scope && (
+              <div>
+                <dt>Scope</dt>
+                <dd>
+                  <code>{endpoint.scope}</code>
+                </dd>
+              </div>
+            )}
+            {endpoint.rateLimit && (
+              <div>
+                <dt>Rate limit</dt>
+                <dd>{endpoint.rateLimit}</dd>
+              </div>
+            )}
+          </dl>
+        )
+      }
+      {endpoint.callouts?.map((callout) => <Callout {...callout} />)}
+      {
+        endpoint.pathParams && (
+          <>
+            <h3 class="fields-heading">Path parameters</h3>
+            <FieldList fields={endpoint.pathParams} childLabel="parameters" />
+          </>
+        )
+      }
+      {
+        endpoint.queryParams && (
+          <>
+            <h3 class="fields-heading">Query parameters</h3>
+            <FieldList fields={endpoint.queryParams} childLabel="parameters" />
+          </>
+        )
+      }
+      {
+        endpoint.bodyParams && (
+          <>
+            <h3 class="fields-heading">Body parameters</h3>
+            {endpoint.bodyWrapper && (
+              <p class="fields-note">
+                Send these inside a <code>{endpoint.bodyWrapper}</code> object.
+              </p>
+            )}
+            <FieldList fields={endpoint.bodyParams} childLabel="parameters" />
+          </>
+        )
+      }
+      <h3 class="fields-heading">Returns</h3>
+      <div class="prose" set:html={inline(endpoint.returns)} />
+      {endpoint.responseFields && <FieldList fields={endpoint.responseFields} />}
+    </div>
+    <div class="section-code" data-pagefind-ignore>
+      <div class="sticky-code">
+        <CodePanel title="Request" blocks={requestBlocks} switcher />
+        <CodePanel title="Response" blocks={responseBlocks} status={endpoint.response.status} lineNumbers={false} />
+      </div>
+    </div>
+  </div>
+</section>

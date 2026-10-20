@@ -1,0 +1,164 @@
+---
+import { inline } from "../lib/markdown";
+import type { Field } from "../data/types";
+
+interface Props {
+  fields: Field[];
+  nested?: boolean;
+  childLabel?: string;
+}
+
+const { fields, nested = false, childLabel = "attributes" } = Astro.props;
+---
+
+<ul class:list={["fields", { "fields-nested": nested }]}>
+  {
+    fields.map((field) => (
+      <li class="field">
+        <div class="field-head">
+          <code class="field-name">{field.name}</code>
+          <span class="field-type">{field.type}</span>
+          {field.required && <span class="field-required">Required</span>}
+        </div>
+        <div class="field-description" set:html={inline(field.description)} />
+        {field.values && (
+          <div class="field-values">
+            <span>Possible values:</span>
+            {field.values.map((value) => (
+              <code>{value}</code>
+            ))}
+          </div>
+        )}
+        {field.children && (
+          <details class="field-children">
+            <summary>
+              <span class="when-closed">Show child {childLabel}</span>
+              <span class="when-open">Hide child {childLabel}</span>
+            </summary>
+            <Astro.self fields={field.children} nested childLabel={childLabel} />
+          </details>
+        )}
+      </li>
+    ))
+  }
+</ul>
+
+<style is:global>
+  .fields {
+    list-style: none;
+    margin: 0 0 32px;
+    padding: 0;
+    border-top: 1px solid var(--border);
+  }
+
+  .field {
+    padding: 14px 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .field-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 8px;
+    margin-bottom: 4px;
+  }
+
+  .field-name {
+    background: none;
+    border: 0;
+    padding: 0;
+    color: var(--fg);
+    font-size: 13.5px;
+    font-weight: 700;
+  }
+
+  .field-type {
+    color: var(--fg-faint);
+    font-size: 12.5px;
+  }
+
+  .field-required {
+    color: var(--mango-900);
+    font-size: 11.5px;
+    font-weight: 600;
+  }
+
+  :root[data-theme="dark"] .field-required {
+    color: var(--mango-300);
+  }
+
+  .field-description {
+    color: var(--fg-muted);
+    font-size: 14px;
+  }
+
+  .field-description code {
+    overflow-wrap: anywhere;
+  }
+
+  .field-values {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+    margin-top: 6px;
+    color: var(--fg-faint);
+    font-size: 12.5px;
+  }
+
+  .field-children {
+    margin-top: 10px;
+  }
+
+  .field-children > summary {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 3px 12px;
+    border: 1px solid var(--border-strong);
+    border-radius: 999px;
+    color: var(--fg-muted);
+    font-size: 12.5px;
+    font-weight: 600;
+    cursor: pointer;
+    list-style: none;
+  }
+
+  .field-children > summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .field-children > summary::before {
+    content: "+";
+    font-weight: 700;
+  }
+
+  .field-children[open] > summary::before {
+    content: "−";
+  }
+
+  .field-children > summary:hover {
+    background: var(--hover);
+  }
+
+  .field-children .when-open,
+  .field-children[open] .when-closed {
+    display: none;
+  }
+
+  .field-children[open] .when-open {
+    display: inline;
+  }
+
+  .fields-nested {
+    margin: 10px 0 0;
+    padding: 0 14px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+  }
+
+  .fields-nested > .field:last-child {
+    border-bottom: 0;
+  }
+</style>

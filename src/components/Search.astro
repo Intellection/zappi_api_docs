@@ -1,0 +1,116 @@
+---
+
+---
+
+<dialog class="search" data-search aria-label="Search the docs">
+  <div class="search-box">
+    <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"
+      ><circle cx="7" cy="7" r="4.5" fill="none" stroke="currentColor" stroke-width="1.5"></circle><path
+        d="M10.5 10.5L14 14"
+        stroke="currentColor"
+        stroke-width="1.5"></path></svg
+    >
+    <input type="search" placeholder="Search the docs" autocomplete="off" spellcheck="false" data-search-input />
+    <kbd>Esc</kbd>
+  </div>
+  <ul class="search-results" data-search-results></ul>
+</dialog>
+
+<style is:global>
+  .search {
+    width: min(640px, calc(100vw - 32px));
+    max-height: min(560px, calc(100vh - 120px));
+    margin: 80px auto auto;
+    padding: 0;
+    border: 1px solid var(--border-strong);
+    border-radius: 12px;
+    background: var(--bg);
+    color: var(--fg);
+    box-shadow: 0 24px 64px rgba(0, 0, 0, 0.24);
+    overflow: hidden;
+  }
+
+  .search[open] {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .search::backdrop {
+    background: rgba(0, 0, 0, 0.32);
+  }
+
+  .search-box {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 0 16px;
+    border-bottom: 1px solid var(--border);
+    color: var(--fg-faint);
+  }
+
+  .search-box input {
+    flex: 1;
+    height: 52px;
+    border: 0;
+    outline: 0;
+    background: transparent;
+    color: var(--fg);
+    font: inherit;
+    font-size: 16px;
+  }
+
+  .search-box kbd {
+    padding: 0 6px;
+    border: 1px solid var(--border-strong);
+    border-radius: 4px;
+    font: 11px var(--font-sans);
+  }
+
+  .search-results {
+    margin: 0;
+    padding: 8px;
+    overflow-y: auto;
+    list-style: none;
+  }
+
+  .search-results:empty {
+    display: none;
+  }
+
+  .search-result a {
+    display: block;
+    padding: 10px 12px;
+    border-radius: var(--radius);
+    color: var(--fg);
+  }
+
+  .search-result a:hover,
+  .search-result a[aria-selected="true"] {
+    background: var(--accent-bg);
+  }
+
+  .search-result-title {
+    display: block;
+    font-weight: 600;
+    font-size: 14px;
+  }
+
+  .search-result-excerpt {
+    display: block;
+    margin-top: 2px;
+    color: var(--fg-muted);
+    font-size: 13px;
+  }
+
+  .search-result-excerpt mark {
+    background: none;
+    color: var(--accent-fg);
+    font-weight: 600;
+  }
+
+  .search-empty {
+    padding: 16px 12px;
+    color: var(--fg-muted);
+    font-size: 14px;
+  }
+</style>

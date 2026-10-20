@@ -1,26 +1,19 @@
-FROM 471112705198.dkr.ecr.us-east-1.amazonaws.com/zappi/base/ruby:3.3.5-3 AS builder
+FROM 471112705198.dkr.ecr.us-east-1.amazonaws.com/zappi/base/nodejs:24.13.0 AS builder
 
 # ARGs & ENVs
-ENV BUNDLE_PATH="/srv/bundle"
 ARG CODE_PATH="/srv/code"
 
 WORKDIR ${CODE_PATH}
 
-# Cache, install & clean ruby gem dependencies
-COPY Gemfile Gemfile.lock ./
-RUN mkdir -p ${BUNDLE_PATH} && \
-    export BUNDLER_VERSION=$(cat Gemfile.lock | tail -1 | tr -d "[:space:]") && \
-    gem install bundler -v "${BUNDLER_VERSION}" && \
-    bundle config set frozen 'true' && \
-    bundle config set without "test development" && \
-    bundle install --jobs 8 --retry 3 && \
-    rm -rf ${BUNDLE_PATH}/{cache,ruby/*/cache}
+# Cache & install node dependencies
+COPY package.json package-lock.json ./
+RUN npm ci
 
 # Copy the rest of the app
 ADD . ${CODE_PATH}
 
-# Generate static files from raw docs
-RUN bundle exec middleman build
+# Generate the static site and its search index
+RUN npm run build
 
 FROM 471112705198.dkr.ecr.us-east-1.amazonaws.com/docker-hub/zappi/nginx:1.27.4
 

@@ -1,0 +1,81 @@
+/* Zappi DS tokens (zappi-ui tailwind preset), carried over from the Slate theme */
+:root {
+  --guava-100: #ffe2e8;
+  --guava-300: #ff9fb4;
+  --guava-500: #ff4d7c;
+  --guava-900: #8f0c40;
+  --blueberry-100: #d3efff;
+  --blueberry-300: #81c7ff;
+  --blueberry-800: #003ddb;
+  --blueberry-900: #0b39a4;
+  --fern-100: #e2f6e2;
+  --fern-300: #9bda9b;
+  --fern-900: #204722;
+  --mango-100: #fff9c5;
+  --mango-300: #ffe746;
+  --mango-900: #7c3e0b;
+  --valencia-100: #fbe6e5;
+  --valencia-500: #db4a46;
+  --valencia-900: #752927;
+  --mine-shaft-500: #818181;
+  --mine-shaft-800: #262626;
+  --mine-shaft-900: #313131;
+  --mine-shaft-950: #1a1a1a;
+
+  --font-sans: "Noto Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+
+  --sidebar-width: 264px;
+  --topbar-height: 56px;
+  --content-max: 1240px;
+  --radius: 8px;
+}
+
+/* Semantic tokens: light */
+:root,
+:root[data-theme="light"] {
+  color-scheme: light;
+  --bg: #fff;
+  --bg-subtle: #f5f5f5;
+  --fg: rgba(0, 0, 0, 0.8);
+  --fg-muted: rgba(0, 0, 0, 0.6);
+  --fg-faint: rgba(0, 0, 0, 0.4);
+  --border: #e4e4e4;
+  --border-strong: #d1d1d1;
+  --hover: rgba(0, 0, 0, 0.05);
+  --link: var(--blueberry-800);
+  --link-hover: var(--blueberry-900);
+  --accent-bg: var(--guava-100);
+  --accent-fg: var(--guava-900);
+  --code-inline-bg: #f5f5f5;
+  --code-panel-bg: var(--mine-shaft-900);
+  --code-panel-header: var(--mine-shaft-950);
+  --code-panel-fg: rgba(255, 255, 255, 0.85);
+  --method-get: var(--blueberry-800);
+  --method-post: #1f7a3a;
+  --method-delete: var(--valencia-500);
+}
+
+/* Semantic tokens: dark */
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: var(--mine-shaft-950);
+  --bg-subtle: var(--mine-shaft-800);
+  --fg: rgba(255, 255, 255, 0.88);
+  --fg-muted: rgba(255, 255, 255, 0.64);
+  --fg-faint: rgba(255, 255, 255, 0.42);
+  --border: rgba(255, 255, 255, 0.1);
+  --border-strong: rgba(255, 255, 255, 0.18);
+  --hover: rgba(255, 255, 255, 0.08);
+  --link: var(--blueberry-300);
+  --link-hover: #b3dcff;
+  --accent-bg: rgba(255, 77, 124, 0.16);
+  --accent-fg: var(--guava-300);
+  --code-inline-bg: rgba(255, 255, 255, 0.08);
+  --code-panel-bg: var(--mine-shaft-800);
+  --code-panel-header: #202020;
+  --code-panel-fg: rgba(255, 255, 255, 0.85);
+  --method-get: var(--blueberry-300);
+  --method-post: var(--fern-300);
+  --method-delete: #ff8a86;
+}

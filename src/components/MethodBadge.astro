@@ -1,0 +1,40 @@
+---
+import type { HttpMethod } from "../data/types";
+
+interface Props {
+  method: HttpMethod;
+  size?: "sm" | "md";
+}
+
+const { method, size = "md" } = Astro.props;
+---
+
+<span class:list={["method", `method-${method.toLowerCase()}`, `method-${size}`]}>{method}</span>
+
+<style>
+  .method {
+    font-family: var(--font-mono);
+    font-weight: 700;
+    letter-spacing: 0.02em;
+  }
+
+  .method-md {
+    font-size: 13px;
+  }
+
+  .method-sm {
+    font-size: 10px;
+  }
+
+  .method-get {
+    color: var(--method-get);
+  }
+
+  .method-post {
+    color: var(--method-post);
+  }
+
+  .method-delete {
+    color: var(--method-delete);
+  }
+</style>

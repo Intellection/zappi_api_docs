@@ -1,0 +1,204 @@
+---
+import { LANGUAGES } from "../lib/snippets";
+
+type Block = { id: string; html: string };
+
+interface Props {
+  title: string;
+  blocks: Block[];
+  // Show the language dropdown and swap blocks with the reader's chosen language
+  switcher?: boolean;
+  status?: number;
+  lineNumbers?: boolean;
+}
+
+const { title, blocks, switcher = false, status, lineNumbers = true } = Astro.props;
+---
+
+<div class:list={["code-panel", { "line-numbers": lineNumbers }]}>
+  <div class="code-panel-header">
+    <span class="code-panel-title">{title}</span>
+    {status && <span class:list={["status", status < 300 ? "status-ok" : "status-error"]}>{status}</span>}
+    <div class="code-panel-tools">
+      {
+        switcher && (
+          <label class="lang-select">
+            <span class="sr-only">Language</span>
+            <select data-lang-select>
+              {LANGUAGES.map((lang) => (
+                <option value={lang.id}>{lang.label}</option>
+              ))}
+            </select>
+          </label>
+        )
+      }
+      <button type="button" class="icon-button" data-copy-code aria-label="Copy code" title="Copy">
+        <svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"
+          ><rect x="5" y="5" width="9" height="9" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.4"
+          ></rect><path d="M11 3.5V3a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1v7a1 1 0 0 0 1 1h.5" fill="none" stroke="currentColor" stroke-width="1.4"
+          ></path></svg
+        >
+      </button>
+    </div>
+  </div>
+  <div class="code-panel-body">
+    {
+      blocks.map((block) => (
+        <div class="code-block" data-snippet={switcher ? block.id : undefined} set:html={block.html} />
+      ))
+    }
+  </div>
+</div>
+
+<style is:global>
+  .code-panel {
+    background: var(--code-panel-bg);
+    color: var(--code-panel-fg);
+    border-radius: var(--radius);
+    overflow: hidden;
+    font-size: 12.5px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.12);
+  }
+
+  .code-panel + .code-panel {
+    margin-top: 16px;
+  }
+
+  .code-panel-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 40px;
+    padding: 0 8px 0 14px;
+    background: var(--code-panel-header);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  }
+
+  .code-panel-title {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .code-panel-tools {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin-left: auto;
+  }
+
+  .status {
+    padding: 1px 7px;
+    border-radius: 999px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 600;
+  }
+
+  .status-ok {
+    background: rgba(155, 218, 155, 0.16);
+    color: var(--fern-300);
+  }
+
+  .status-error {
+    background: rgba(219, 74, 70, 0.2);
+    color: #ff8a86;
+  }
+
+  .lang-select select {
+    appearance: none;
+    padding: 4px 26px 4px 10px;
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.06)
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 10 10'%3E%3Cpath d='M2 3.5l3 3 3-3' fill='none' stroke='%23ffffffb3' stroke-width='1.4'/%3E%3C/svg%3E")
+      no-repeat right 9px center;
+    color: rgba(255, 255, 255, 0.88);
+    font: 600 12px var(--font-sans);
+    cursor: pointer;
+  }
+
+  .lang-select select:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+  }
+
+  .lang-select option {
+    background: var(--mine-shaft-900);
+    color: #fff;
+  }
+
+  .icon-button {
+    display: inline-grid;
+    place-items: center;
+    width: 28px;
+    height: 28px;
+    border: 0;
+    border-radius: 6px;
+    background: transparent;
+    color: rgba(255, 255, 255, 0.6);
+    cursor: pointer;
+  }
+
+  .icon-button:hover {
+    background: rgba(255, 255, 255, 0.08);
+    color: #fff;
+  }
+
+  .icon-button[data-copied] {
+    color: var(--fern-300);
+  }
+
+  .code-panel-body {
+    max-height: min(560px, 70vh);
+    overflow: auto;
+  }
+
+  .code-block pre {
+    margin: 0;
+    padding: 14px 16px;
+    background: transparent !important;
+    font-family: var(--font-mono);
+    line-height: 1.65;
+    tab-size: 4;
+  }
+
+  .code-block code {
+    background: none;
+    border: 0;
+    padding: 0;
+    font-size: inherit;
+  }
+
+  .line-numbers .code-block code {
+    counter-reset: line;
+  }
+
+  .line-numbers .code-block .line::before {
+    counter-increment: line;
+    content: counter(line);
+    display: inline-block;
+    width: 2ch;
+    margin-right: 16px;
+    color: rgba(255, 255, 255, 0.28);
+    text-align: right;
+    user-select: none;
+  }
+
+  /* Only the reader's chosen language is shown; the inline script in Layout sets data-lang */
+  [data-snippet] {
+    display: none;
+  }
+
+  html[data-lang="curl"] [data-snippet="curl"],
+  html[data-lang="node"] [data-snippet="node"],
+  html[data-lang="python"] [data-snippet="python"],
+  html[data-lang="ruby"] [data-snippet="ruby"],
+  html[data-lang="php"] [data-snippet="php"],
+  html[data-lang="go"] [data-snippet="go"],
+  html[data-lang="java"] [data-snippet="java"],
+  html[data-lang="csharp"] [data-snippet="csharp"] {
+    display: block;
+  }
+</style>

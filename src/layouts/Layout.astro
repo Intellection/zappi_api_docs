@@ -1,0 +1,60 @@
+---
+import "../styles/global.css";
+import Search from "../components/Search.astro";
+import Sidebar from "../components/Sidebar.astro";
+import Topbar from "../components/Topbar.astro";
+import { navigation } from "../lib/nav";
+
+interface Props {
+  title: string;
+  description: string;
+}
+
+const { title, description } = Astro.props;
+const { general, reference } = await navigation();
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="icon" type="image/png" href="/zappi-favicon-32x32.png" />
+    <link rel="alternate" type="text/plain" href="/llms.txt" title="LLM-friendly documentation" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <script is:inline>
+      // Apply saved preferences before first paint so the page doesn't flash
+      (function () {
+        var root = document.documentElement;
+        var get = function (key) {
+          try {
+            return localStorage.getItem(key);
+          } catch (e) {
+            return null;
+          }
+        };
+        var theme = get("zappi-docs-theme");
+        if (!theme) theme = matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+        root.dataset.theme = theme;
+        root.dataset.lang = get("zappi-docs-lang") || "curl";
+      })();
+    </script>
+  </head>
+  <body>
+    <Topbar />
+    <div class="page">
+      <Sidebar general={general} reference={reference} />
+      <main class="main" data-pagefind-body>
+        <slot />
+      </main>
+    </div>
+    <Search />
+    <script>
+      import "../scripts/docs.ts";
+    </script>
+  </body>
+</html>

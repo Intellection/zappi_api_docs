@@ -1,0 +1,40 @@
+---
+import EndpointSection from "../components/EndpointSection.astro";
+import GuideSection from "../components/GuideSection.astro";
+import ObjectSection from "../components/ObjectSection.astro";
+import Layout from "../layouts/Layout.astro";
+import { domains } from "../data/reference";
+import { inline } from "../lib/markdown";
+import { generalGuides, guidesById } from "../lib/nav";
+
+const general = await generalGuides();
+const guides = await guidesById();
+---
+
+<Layout
+  title="Zappi API Reference"
+  description="Reference for the Zappi API: authenticate, create and track orders, download deliverables and receive webhooks."
+>
+  {general.map((guide) => <GuideSection guide={guide} />)}
+
+  {
+    domains.map((domain) => (
+      <>
+        <section class="domain-header" data-spy={domain.id}>
+          <span class="eyebrow">API reference</span>
+          <h2 id={domain.id}>{domain.label}</h2>
+          <p set:html={inline(domain.description)} />
+        </section>
+        {domain.sections.map((section) =>
+          section.kind === "endpoint" ? (
+            <EndpointSection endpoint={section} />
+          ) : section.kind === "object" ? (
+            <ObjectSection object={section} />
+          ) : (
+            <GuideSection guide={guides.get(section.id)!} />
+          ),
+        )}
+      </>
+    ))
+  }
+</Layout>

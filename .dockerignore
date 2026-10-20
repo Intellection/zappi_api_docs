@@ -1,9 +1,8 @@
 *
 
-!lib/
-!source/
-!.ruby-version
-!Gemfile
-!Gemfile.lock
-!config.rb
-
+!src/
+!public/
+!package.json
+!package-lock.json
+!astro.config.mjs
+!tsconfig.json

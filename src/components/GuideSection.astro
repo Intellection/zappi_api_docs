@@ -1,0 +1,48 @@
+---
+import { render, type CollectionEntry } from "astro:content";
+import CodePanel from "./CodePanel.astro";
+import SectionActions from "./SectionActions.astro";
+import { highlight } from "../lib/highlight";
+import { guideMarkdown } from "../lib/markdown";
+
+interface Props {
+  guide: CollectionEntry<"guides">;
+}
+
+const { guide } = Astro.props;
+const { Content } = await render(guide);
+const examples = await Promise.all(
+  (guide.data.examples ?? []).map(async (example) => ({
+    ...example,
+    blocks: [{ id: example.lang, html: await highlight(example.code.trimEnd(), example.lang) }],
+  })),
+);
+---
+
+<section class="doc-section" data-spy={guide.id}>
+  <div class="section-grid">
+    <div class="section-prose">
+      <header class="section-header">
+        <div>
+          {guide.data.eyebrow && <span class="eyebrow">{guide.data.eyebrow}</span>}
+          <h2 id={guide.id}>{guide.data.title}</h2>
+        </div>
+        <SectionActions id={guide.id} markdown={guideMarkdown(guide.data.title, guide.body ?? "")} />
+      </header>
+      <div class="prose">
+        <Content />
+      </div>
+    </div>
+    <div class="section-code" data-pagefind-ignore>
+      {
+        examples.length > 0 && (
+          <div class="sticky-code">
+            {examples.map((example) => (
+              <CodePanel title={example.title} blocks={example.blocks} status={example.status} lineNumbers={false} />
+            ))}
+          </div>
+        )
+      }
+    </div>
+  </div>
+</section>

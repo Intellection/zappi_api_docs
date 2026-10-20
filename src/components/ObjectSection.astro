@@ -1,0 +1,34 @@
+---
+import CodePanel from "./CodePanel.astro";
+import FieldList from "./FieldList.astro";
+import SectionActions from "./SectionActions.astro";
+import { highlight } from "../lib/highlight";
+import { inline, objectMarkdown } from "../lib/markdown";
+import type { ObjectDef } from "../data/types";
+
+interface Props {
+  object: ObjectDef;
+}
+
+const { object } = Astro.props;
+const example = [{ id: "json", html: await highlight(JSON.stringify(object.example, null, 2), "json") }];
+---
+
+<section class="doc-section" data-spy={object.id}>
+  <div class="section-grid">
+    <div class="section-prose">
+      <header class="section-header">
+        <h2 id={object.id}>{object.title}</h2>
+        <SectionActions id={object.id} markdown={objectMarkdown(object)} />
+      </header>
+      <div class="prose" set:html={inline(object.description)} />
+      <h3 class="fields-heading">Attributes</h3>
+      <FieldList fields={object.attributes} />
+    </div>
+    <div class="section-code" data-pagefind-ignore>
+      <div class="sticky-code">
+        <CodePanel title={object.title} blocks={example} lineNumbers={false} />
+      </div>
+    </div>
+  </div>
+</section>

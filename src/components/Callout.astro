@@ -1,0 +1,14 @@
+---
+import { inline } from "../lib/markdown";
+import type { Callout } from "../data/types";
+
+type Props = Callout;
+
+const { type, text } = Astro.props;
+const label = { note: "Note", warning: "Warning", tip: "Tip" }[type];
+---
+
+<aside class:list={["callout", `callout-${type}`]}>
+  <strong class="callout-label">{label}</strong>
+  <div set:html={inline(text)} />
+</aside>

@@ -12,10 +12,6 @@ The Zappi API is organised around REST. It has predictable, resource-oriented UR
 
 With it, a public integration can create orders on behalf of a customer, follow them through to completion and download their deliverables.
 
-:::note
-The API is in beta. We may still change it, so don't treat this reference as final.
-:::
-
 ### Public integrations
 
 Third parties connect to Zappi through a **public integration**. Zappi reviews and approves every integration before customers can use it.

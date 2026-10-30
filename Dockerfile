@@ -15,7 +15,7 @@ ADD . ${CODE_PATH}
 # Generate the static site and its search index
 RUN npm run build
 
-FROM 471112705198.dkr.ecr.us-east-1.amazonaws.com/docker-hub/zappi/nginx:1.27.4
+FROM 471112705198.dkr.ecr.us-east-1.amazonaws.com/docker-hub/zappi/nginx:1.31.8-1
 
 # ARGs & ENVs
 ARG CODE_PATH="/srv/code"
